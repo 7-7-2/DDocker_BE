@@ -2,7 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 router.get('/user', (req, res) => {
-    res.send('hello world')
+  // #swagger.tags = ['USER']
+  // #swagger.responses[500] = { description: '서버 에러' }
+  // #swagger.responses[200] = { description: '성공' }
+  // #swagger.responses[404] = { description: '요청경로 재확인' }
+
+  res.send('hello world')
   })
 
 module.exports = router;

@@ -1,0 +1,40 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "DDOCKER API SPEC",
+    "description": "똑똑한 커피생활",
+    "version": "1.0.0"
+  },
+  "host": "localhost:4000/api",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "USER",
+      "description": "유저 정보 관련 API"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "tags": [
+          "USER"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "성공"
+          },
+          "404": {
+            "description": "요청경로 재확인"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    }
+  }
+}
