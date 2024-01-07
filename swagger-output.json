@@ -9,29 +9,593 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "USER",
-      "description": "유저 정보 관련 API"
+      "name": "USERS",
+      "description": "유저 프로필 관련 API (api/users)"
+    },
+    {
+      "name": "POSTS",
+      "description": "게시글 목록 및 상세 관련 API (api/posts)"
+    },
+    {
+      "name": "COFFEE",
+      "description": "섭취 카페인 관련 API (api/coffee)"
+    },
+    {
+      "name": "SEARCH",
+      "description": "검색 관련 API (api/search)"
+    },
+    {
+      "name": "FOLLOW",
+      "description": "팔로우 및 팔로잉 관련 API (api/follow)"
     }
   ],
   "schemes": [
     "http"
   ],
   "paths": {
-    "/user": {
+    "/coffee": {
       "get": {
         "tags": [
-          "USER"
+          "COFFEE"
         ],
+        "summary": "기간별 단일 유저 카페인 및 잔 수 조회",
         "description": "",
         "responses": {
           "200": {
-            "description": "성공"
+            "description": "OK"
           },
-          "404": {
-            "description": "요청경로 재확인"
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
-            "description": "서버 에러"
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/coffee/caffeine/{time}": {
+      "get": {
+        "tags": [
+          "COFFEE"
+        ],
+        "summary": "당일 유저 카페인 및 브랜드 조회",
+        "description": "",
+        "parameters": [
+          {
+            "name": "time",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "day,week,month,year"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/follow/{userId}": {
+      "post": {
+        "tags": [
+          "FOLLOW"
+        ],
+        "summary": "인증된 사용자가 param:userId 유저 팔로우",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "FOLLOW"
+        ],
+        "summary": "인증된 사용자가 param:userId 유저 언팔로우",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/follow/{userID}/following": {
+      "get": {
+        "tags": [
+          "FOLLOW"
+        ],
+        "summary": "인증된 사용자가 param:userId의 팔로잉 조회",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/follow/{userID}/follower": {
+      "get": {
+        "tags": [
+          "FOLLOW"
+        ],
+        "summary": "인증된 사용자가 param:userId의 팔로잉 조회",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts": {
+      "get": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "내가 팔로잉한 사람들의 게시물들",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts/{postId}": {
+      "get": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "게시글 상세 정보 조회",
+        "description": "",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "게시글 삭제",
+        "description": "",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "게시글 수정",
+        "description": "",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts/register": {
+      "post": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "게시글 작성",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts/{postId}/comments": {
+      "post": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "댓글 작성",
+        "description": "",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts/{postId}/comments/{commentId}": {
+      "post": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "댓글 삭제",
+        "description": "",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts/reply": {
+      "post": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "답글 작성",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts/reply/{replyId}": {
+      "delete": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "답글 삭제",
+        "description": "",
+        "parameters": [
+          {
+            "name": "replyId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/posts/popular": {
+      "get": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "인기 브랜드 순위 조회",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/search/{userId}": {
+      "get": {
+        "tags": [
+          "SEARCH"
+        ],
+        "summary": "유저 검색",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": [
+          "USERS"
+        ],
+        "summary": "회원가입 유저 등록",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{userId}/userInfo": {
+      "get": {
+        "tags": [
+          "USERS"
+        ],
+        "summary": "프로필 페이지 상단 정보 (유저이름, 프로필사진, 카페인 정보)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "USERS"
+        ],
+        "summary": "EDIT 페이지 프로필 정보 수정",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{userId}/follow": {
+      "get": {
+        "tags": [
+          "USERS"
+        ],
+        "summary": "프로필 페이지용 팔로우/팔로잉 카운트",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{userId}/posts": {
+      "get": {
+        "tags": [
+          "USERS"
+        ],
+        "summary": "유저 작성 게시물 그리드",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
