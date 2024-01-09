@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const swaggerUI = require('swagger-ui-express');
 const swaggerFile = require('../swagger-output.json');
+const { CREDENTIALS, ORIGIN } = require('../config/index');
 
 module.exports = async ({ app }) => {
   app.get('/status', (req, res) => {
@@ -13,7 +14,7 @@ module.exports = async ({ app }) => {
   });
   app.enable('trust proxy');
 
-  app.use(require('cors')());
+  app.use(require('cors')({ origin: ORIGIN, credentials: CREDENTIALS }));
   app.use(require('morgan')('dev'));
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());

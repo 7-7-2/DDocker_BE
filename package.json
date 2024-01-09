@@ -4,7 +4,9 @@
   "description": "",
   "main": "indexs.js",
   "scripts": {
-    "start": "node swagger.js && node app.js",
+    "start": "pm2 start ecosystem.config.js",
+    "dev": "cross-env NODE_ENV=development pm2 start ecosystem.config.js",
+    "prod": "cross-env NODE_ENV=production pm2 start ecosystem.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,6 +22,7 @@
     "swagger-autogen": "^2.23.7"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "prettier": "^3.1.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
