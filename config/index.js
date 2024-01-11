@@ -13,12 +13,27 @@ if (process.env.NODE_ENV === undefined) {
 
 const CREDENTIALS = process.env.CREDENTIALS === 'true';
 
-const { NODE_ENV, NODE_MESSAGE, PORT, ORIGIN } = process.env;
+const {
+  NODE_ENV,
+  NODE_MESSAGE,
+  PORT,
+  DB_HOST,
+  DB_PORT,
+  DB_USER,
+  DB_PASSWORD,
+  DB_DATABASE,
+  ORIGIN
+} = process.env;
 
 module.exports = {
   CREDENTIALS,
   NODE_ENV,
   NODE_MESSAGE,
   PORT,
+  DB_HOST,
+  DB_PORT,
+  DB_USER,
+  DB_PASSWORD,
+  DB_DATABASE,
   ORIGIN
 };
