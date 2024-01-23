@@ -22,6 +22,7 @@ const {
   DB_USER,
   DB_PASSWORD,
   DB_DATABASE,
+  DB_SCHEMA,
   ORIGIN
 } = process.env;
 
@@ -35,5 +36,6 @@ module.exports = {
   DB_USER,
   DB_PASSWORD,
   DB_DATABASE,
+  DB_SCHEMA,
   ORIGIN
 };

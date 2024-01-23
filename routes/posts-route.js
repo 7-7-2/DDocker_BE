@@ -1,25 +1,27 @@
 const express = require('express');
 const router = express.Router();
+const postController = require('../controllers/posts-controller');
 
-router.get('/posts', (req, res) => {
-  res.json('내가 팔로잉한 사람들의 게시물들');
+router.get(
+  '/posts'
+  //        !!!!! GET FOLLOWERS POSTS !!!!
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '내가 팔로잉한 사람들의 게시물들'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 router
   .route('/posts/:postId')
-  .get((req, res) => {
-    res.json('게시글 상세 정보 조회');
+  .get(
+    postController.getPostDetail
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '게시글 상세 정보 조회'
     // #swagger.responses[200] = { description: 'OK' }
     // #swagger.responses[400] = { description: 'Bad Request' }
     // #swagger.responses[500] = { description: 'Internal Server Error' }
-  })
+  )
   .patch((req, res) => {
     res.json('게시글 수정');
     // #swagger.tags = ['POSTS']
