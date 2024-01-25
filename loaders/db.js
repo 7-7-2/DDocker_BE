@@ -9,15 +9,14 @@ const {
 } = require('../config/index');
 
 const conn = async () => {
-  const connection = await mysql
-    .createConnection({
-      host: DB_HOST,
-      port: Number(DB_PORT),
-      user: DB_USER,
-      password: DB_PASSWORD,
-      database: DB_SCHEMA
-    })
-    .catch(err => console.log(err));
+  const connection = mysql.createPool({
+    host: DB_HOST,
+    port: Number(DB_PORT),
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DB_SCHEMA,
+    connectionLimit: 10
+  });
   return connection;
 };
 
