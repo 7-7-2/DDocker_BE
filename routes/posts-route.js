@@ -39,14 +39,15 @@ router
     // #swagger.responses[500] = { description: 'Internal Server Error' }
   });
 
-router.post('/posts/register', (req, res) => {
-  res.json('게시글 작성');
+router.post(
+  '/posts/register',
+  postController.registerPost
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '게시글 작성'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 router.post('/posts/:postId/comments', (req, res) => {
   res.json('댓글 작성');
