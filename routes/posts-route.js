@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/posts-controller');
+const errorHandler = require('../middlewares/errorHandler');
 
 router.get(
   '/posts'
@@ -15,7 +16,7 @@ router.get(
 router
   .route('/posts/:postId')
   .get(
-    postController.getPostDetail
+    errorHandler(postController.getPostDetail)
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '게시글 상세 정보 조회'
     // #swagger.responses[200] = { description: 'OK' }
@@ -41,7 +42,7 @@ router
 
 router.post(
   '/posts/register',
-  postController.registerPost
+  errorHandler(postController.registerPost)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '게시글 작성'
   // #swagger.responses[200] = { description: 'OK' }
