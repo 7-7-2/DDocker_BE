@@ -18,7 +18,7 @@ exports.getPostDetail = async postReq => {
 
 exports.registerPost = async postReq => {
   const { user_id, brand, menu, post_title, size, shot, caffeine, photo } =
-    postReq;
+    await postReq;
   const sql = `INSERT INTO post ( user_id, brand, menu, post_title, size, shot, caffeine, photo  ) VALUES ( ?,?,?,?,?,?,?,? )`;
   const params = [
     user_id,
@@ -28,9 +28,8 @@ exports.registerPost = async postReq => {
     size,
     shot,
     caffeine,
-    photo.trim()
+    photo
   ];
-
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql, params);
