@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/posts-controller');
+const errorHandler = require('../middlewares/errorHandler');
 
 router.get(
   '/posts'
@@ -15,7 +16,7 @@ router.get(
 router
   .route('/posts/:postId')
   .get(
-    postController.getPostDetail
+    errorHandler(postController.getPostDetail)
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '게시글 상세 정보 조회'
     // #swagger.responses[200] = { description: 'OK' }
@@ -39,14 +40,15 @@ router
     // #swagger.responses[500] = { description: 'Internal Server Error' }
   });
 
-router.post('/posts/register', (req, res) => {
-  res.json('게시글 작성');
+router.post(
+  '/posts/register',
+  errorHandler(postController.registerPost)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '게시글 작성'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 router.post('/posts/:postId/comments', (req, res) => {
   res.json('댓글 작성');
