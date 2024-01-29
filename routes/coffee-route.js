@@ -7,7 +7,7 @@ router.get(
     res.json('coffee');
   }
   // #swagger.tags = ['COFFEE']
-  // #swagger.summary = '기간별 단일 유저 카페인 및 잔 수 조회'
+  // #swagger.summary = '당일 유저 카페인 및 브랜드 조회'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
@@ -19,7 +19,7 @@ router.get(
     res.json('caffeine');
   }
   // #swagger.tags = ['COFFEE']
-  // #swagger.summary = '당일 유저 카페인 및 브랜드 조회'
+  // #swagger.summary = '기간별 단일 유저 카페인 및 잔 수 조회'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
