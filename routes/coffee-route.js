@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const coffeeController = require('../controllers/coffee-controller');
 
 router.get(
-  '/coffee',
-  (req, res) => {
-    res.json('coffee');
-  }
+  '/coffee/:userId',
+  coffeeController.getCoffeeInfo
+
   // #swagger.tags = ['COFFEE']
   // #swagger.summary = '당일 유저 카페인 및 브랜드 조회'
   // #swagger.responses[200] = { description: 'OK' }
