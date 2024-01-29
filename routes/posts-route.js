@@ -23,22 +23,22 @@ router
     // #swagger.responses[400] = { description: 'Bad Request' }
     // #swagger.responses[500] = { description: 'Internal Server Error' }
   )
-  .patch((req, res) => {
-    res.json('게시글 수정');
+  .patch(
+    errorHandler(postController.updatePost)
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '게시글 수정'
     // #swagger.responses[200] = { description: 'OK' }
     // #swagger.responses[400] = { description: 'Bad Request' }
     // #swagger.responses[500] = { description: 'Internal Server Error' }
-  })
-  .delete((req, res) => {
-    res.json('게시글 삭제');
+  )
+  .delete(
+    errorHandler(postController.deletePost)
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '게시글 삭제'
     // #swagger.responses[200] = { description: 'OK' }
     // #swagger.responses[400] = { description: 'Bad Request' }
     // #swagger.responses[500] = { description: 'Internal Server Error' }
-  });
+  );
 
 router.post(
   '/posts/register',
@@ -50,16 +50,17 @@ router.post(
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
-router.post('/posts/:postId/comments', (req, res) => {
-  res.json('댓글 작성');
+router.post(
+  '/posts/:postId/comments',
+  errorHandler(postController.writeComment)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '댓글 작성'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
-router.post('/posts/:postId/comments/:commentId', (req, res) => {
+router.delete('/posts/:postId/comments/:commentId', (req, res) => {
   res.json('댓글 삭제');
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '댓글 삭제'

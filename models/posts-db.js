@@ -1,4 +1,5 @@
 const db = require('../loaders/db');
+const buildPatchQuery = require('../middlewares/buildPatchQuery');
 
 exports.getPostDetail = async postReq => {
   const sql = `SELECT 
@@ -30,6 +31,41 @@ exports.registerPost = async postReq => {
     caffeine,
     photo
   ];
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const result = await getConn.query(sql, params);
+  const data = result[0];
+  getConn.release();
+  return data && data;
+};
+
+exports.deletePost = async postReq => {
+  await postReq;
+  const sql = `DELETE FROM post WHERE id = ?`;
+  const params = [postReq];
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const result = await getConn.query(sql, params);
+  const data = result[0];
+  getConn.release();
+  return data && data;
+};
+
+exports.updatePost = async postReq => {
+  const [postId, updateTo] = await postReq;
+  const sql = await buildPatchQuery(postId, updateTo);
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const result = await getConn.query(sql);
+  const data = result[0];
+  getConn.release();
+  return data && data;
+};
+
+exports.writeComment = async postReq => {
+  const [postId, comment] = await postReq;
+  const sql = `INSERT INTO comment ( user_id, post_id, content ) VALUES ( ?,?,? )`;
+  const params = [comment.user_id, postId, comment.content];
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql, params);
