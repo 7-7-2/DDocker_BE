@@ -2,7 +2,6 @@ const userService = require('../services/user-service');
 
 const signIn = async (req, res) => {
   const { social } = req.query;
-
   if (social === 'google') await userService.googleSignIn(res);
   if (social === 'kakao') await userService.kakaoSignIn(res);
 };
@@ -38,18 +37,28 @@ const kakaoRedirect = async (req, res) => {
 const setInitForm = async (req, res) => {
   const body = await req.body;
   const initReq = [body.nickName, body.gender, body.brand, Number(body.id)];
-  await userService.setUserInit(initReq).catch(err => {
-    console.log('Error during set InitForm:', err.message);
-    res.status(500).json({ error: 'Internal Server Error' });
-  });
+  await userService.setUserInit(initReq);
   const accessToken = await userService.getAccessToken(userId);
-  return res.status(200).json({ accessToken: accessToken });
+  return accessToken && res.status(200).json({ accessToken: accessToken });
+};
+
+const editProfile = async (req, res) => {
+  try {
+    await userService.patchUserProfile([req.body, req.userId]);
+    return res.status(200).json('success : ok');
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 const getUserInfo = async (req, res) => {
   const id = req.params.userId;
-  const userInfo = await userService.getUserInfo(id);
-  return res.status(200).json(userInfo);
+  try {
+    const userInfo = await userService.getUserInfo(id);
+    return userInfo && res.status(200).json({ success: ok, data: userInfo });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 // middleware 적용
@@ -64,5 +73,6 @@ module.exports = {
   kakaoRedirect,
   googleRedirect,
   setInitForm,
-  getUserInfo
+  getUserInfo,
+  editProfile
 };
