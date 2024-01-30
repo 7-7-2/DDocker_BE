@@ -46,13 +46,21 @@
         }
       }
     },
-    "/coffee": {
+    "/coffee/{userId}": {
       "get": {
         "tags": [
           "COFFEE"
         ],
-        "summary": "당일 유저 카페인 및 브랜드 조회",
+        "summary": "기간별 단일 유저 카페인 및 잔 수 조회",
         "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -66,20 +74,26 @@
         }
       }
     },
-    "/coffee/caffeine/{time}": {
+    "/coffee/caffeine/{userId}": {
       "get": {
         "tags": [
           "COFFEE"
         ],
-        "summary": "기간별 단일 유저 카페인 및 잔 수 조회",
+        "summary": "당일 유저 카페인 및 브랜드 조회",
         "description": "",
         "parameters": [
           {
-            "name": "time",
+            "name": "userId",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "day,week,month,year"
+            "type": "string"
+          },
+          {
+            "name": "time",
+            "in": "path",
+            "description": "day,week,month,year",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -463,6 +477,92 @@
         }
       }
     },
+    "/users/test": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "성공"
+          },
+          "401": {
+            "description": "권한 없음"
+          },
+          "403": {
+            "description": "금지됨"
+          }
+        }
+      }
+    },
+    "/users/signIn": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "social",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/google/redirect": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "성공"
+          },
+          "201": {
+            "description": "작성됨"
+          },
+          "500": {
+            "description": "내부 서버 오류"
+          }
+        }
+      }
+    },
+    "/users/kakao/redirect": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "성공"
+          },
+          "201": {
+            "description": "작성됨"
+          },
+          "500": {
+            "description": "내부 서버 오류"
+          }
+        }
+      }
+    },
     "/users": {
       "post": {
         "tags": [
@@ -470,6 +570,29 @@
         ],
         "summary": "회원가입 유저 등록",
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nickName": {
+                  "example": "any"
+                },
+                "gender": {
+                  "example": "any"
+                },
+                "brand": {
+                  "example": "any"
+                },
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
