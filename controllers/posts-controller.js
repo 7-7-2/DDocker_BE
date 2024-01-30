@@ -44,3 +44,30 @@ exports.writeComment = async (req, res) => {
     res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
   );
 };
+// 6. 댓글 삭제(+JWT 인증)
+exports.deleteComment = async (req, res) => {
+  const postReq = [req.params.postId, req.params.commentId];
+  const postRes = await PostService.deleteComment(postReq);
+  return (
+    postRes &&
+    res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
+  );
+};
+// 7. 답글 작성(+JWT 인증)
+exports.replyComment = async (req, res) => {
+  const postReq = [req.params.commentId, req.body];
+  const postRes = await PostService.replyComment(postReq);
+  return (
+    postRes &&
+    res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
+  );
+};
+// 8. 답글 삭제(+JWT 인증)
+exports.deleteReply = async (req, res) => {
+  const postReq = req.params.replyId;
+  const postRes = await PostService.deleteReply(postReq);
+  return (
+    postRes &&
+    res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
+  );
+};
