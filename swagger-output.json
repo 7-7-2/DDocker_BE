@@ -457,7 +457,7 @@
         }
       }
     },
-    "/search/{userId}": {
+    "/search/{nickname}": {
       "get": {
         "tags": [
           "SEARCH"
@@ -466,7 +466,7 @@
         "description": "",
         "parameters": [
           {
-            "name": "userId",
+            "name": "nickname",
             "in": "path",
             "required": true,
             "type": "string"
