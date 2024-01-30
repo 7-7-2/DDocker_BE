@@ -1,14 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const AuthMiddleware = require('../middlewares/authMiddleware');
 
-router.post('/users', (req, res) => {
-  res.json('유저 등록');
+const userController = require('../controllers/user-controller');
+
+// middleware 사용 예시
+router.get('/users/test', AuthMiddleware.verifyToken, userController.test);
+
+// Oauth
+router.get('/users/signIn', userController.signIn);
+router.get('/users/google/redirect', userController.googleRedirect);
+router.get('/users/kakao/redirect', userController.kakaoRedirect);
+
+router.post(
+  '/users',
+  userController.setInitForm
   // #swagger.tags = ['USERS']
   // #swagger.summary = '회원가입 유저 등록'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 router
   .route('/users/:userId/userInfo')
@@ -20,14 +32,17 @@ router
     // #swagger.responses[400] = { description: 'Bad Request' }
     // #swagger.responses[500] = { description: 'Internal Server Error' }
   })
-  .get((req, res) => {
-    res.json('프로필 페이지 상단 정보');
-    // #swagger.tags = ['USERS']
-    // #swagger.summary = '프로필 페이지 상단 정보 (유저이름, 프로필사진, 카페인 정보)'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  });
+  .get(
+    userController.getUserInfo
+    //   (req, res) => {
+    //   res.json('프로필 페이지 상단 정보');
+    //   // #swagger.tags = ['USERS']
+    //   // #swagger.summary = '프로필 페이지 상단 정보 (유저이름, 프로필사진, 카페인 정보)'
+    //   // #swagger.responses[200] = { description: 'OK' }
+    //   // #swagger.responses[400] = { description: 'Bad Request' }
+    //   // #swagger.responses[500] = { description: 'Internal Server Error' }
+    // }
+  );
 
 router.get('/users/:userId/follow', (req, res) => {
   res.json('프로필 페이지용 팔로우/팔로잉 카운트');

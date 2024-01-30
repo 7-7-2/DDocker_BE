@@ -33,12 +33,25 @@
     "http"
   ],
   "paths": {
+    "/brand": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "성공"
+          },
+          "500": {
+            "description": "내부 서버 오류"
+          }
+        }
+      }
+    },
     "/coffee": {
       "get": {
         "tags": [
           "COFFEE"
         ],
-        "summary": "기간별 단일 유저 카페인 및 잔 수 조회",
+        "summary": "당일 유저 카페인 및 브랜드 조회",
         "description": "",
         "responses": {
           "200": {
@@ -58,7 +71,7 @@
         "tags": [
           "COFFEE"
         ],
-        "summary": "당일 유저 카페인 및 브랜드 조회",
+        "summary": "기간별 단일 유저 카페인 및 잔 수 조회",
         "description": "",
         "parameters": [
           {
@@ -179,26 +192,6 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/posts": {
-      "get": {
-        "tags": [
-          "POSTS"
-        ],
-        "summary": "내가 팔로잉한 사람들의 게시물들",
-        "description": "",
         "responses": {
           "200": {
             "description": "OK"
@@ -341,7 +334,7 @@
       }
     },
     "/posts/{postId}/comments/{commentId}": {
-      "post": {
+      "delete": {
         "tags": [
           "POSTS"
         ],
