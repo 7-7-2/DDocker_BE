@@ -6,18 +6,16 @@ module.exports = {
       cwd: './',
       instances: 1,
       autorestart: true,
+      watch: true,
       ignore_watch: ['logs'],
       env_local: {
-        NODE_ENV: 'local',
-        PORT: '4000'
+        NODE_ENV: 'local'
       },
       env_dev: {
-        NODE_ENV: 'development',
-        PORT: '4000'
+        NODE_ENV: 'development'
       },
       env_prod: {
-        NODE_ENV: 'production',
-        PORT: '4000'
+        NODE_ENV: 'production'
       }
     }
   ]
