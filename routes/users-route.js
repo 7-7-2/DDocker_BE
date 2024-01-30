@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const AuthMiddleware = require('../middlewares/authMiddleware');
 
 const userController = require('../controllers/user-controller');
 
-router.get('/users/signIn', userController.signIn);
-router.get('/users/signIn/redirect', userController.signInRedirect);
+// middleware 사용 예시
+router.get('/users/test', AuthMiddleware.verifyToken, userController.test);
 
-router.get('/users/kakao', userController.kakaoSignIn);
+// Oauth
+router.get('/users/signIn', userController.signIn);
+router.get('/users/google/redirect', userController.googleRedirect);
 router.get('/users/kakao/redirect', userController.kakaoRedirect);
 
 router.post(

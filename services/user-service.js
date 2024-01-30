@@ -62,7 +62,6 @@ const getGoogleAuth = async code => {
 
   const res = await userInfoReq.json();
   const userInfo = [res.picture, res.email, 'google'];
-
   return userInfo;
 };
 
@@ -153,13 +152,14 @@ const getUserInfo = async id => {
 // DDOCKER ACCESS_TOKEN
 const getAccessToken = async id => {
   const signInInfo = await getUserInfo(id);
-  console.log(signInInfo);
+
   if (!signInInfo) {
     return null;
   }
+
   const user = {
-    nickname: signInInfo.nickname,
-    userId: signInInfo.id
+    nickname: await signInInfo[0][0].nickname,
+    userId: await signInInfo[0][0].id
   };
 
   return jwt.sign(user, ACCESS_TOKEN_SECRET);
