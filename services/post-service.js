@@ -1,11 +1,10 @@
 const postsDB = require('../models/posts-db');
 const validatePostForm = require('../middlewares/validatePostForm');
 
-// + getPoset,deletePost,writeComment 예외처리, updatePost props 0개 테스트
 module.exports = {
   getPostDetail: async (req, res) => {
     const result = await postsDB.getPostDetail(req);
-    return result;
+    return result ? result : Promise.reject('Failed to get post detail');
   },
   registerPost: async (req, res) => {
     const result = (await validatePostForm(req))
@@ -15,14 +14,26 @@ module.exports = {
   },
   deletePost: async (req, res) => {
     const result = await postsDB.deletePost(req);
-    return result;
+    return result ? result : Promise.reject('Failed to delete post');
   },
   updatePost: async (req, res) => {
     const result = await postsDB.updatePost(req);
-    return result;
+    return result ? result : Promise.reject('Failed to update post');
   },
   writeComment: async (req, res) => {
     const result = await postsDB.writeComment(req);
-    return result;
+    return result ? result : Promise.reject('Failed to write comment');
+  },
+  deleteComment: async (req, res) => {
+    const result = await postsDB.deleteComment(req);
+    return result ? result : Promise.reject('Failed to delete comment');
+  },
+  replyComment: async (req, res) => {
+    const result = await postsDB.replyComment(req);
+    return result ? result : Promise.reject('Failed to reply comment');
+  },
+  deleteReply: async (req, res) => {
+    const result = await postsDB.deleteReply(req);
+    return result ? result : Promise.reject('Failed to delete reply');
   }
 };
