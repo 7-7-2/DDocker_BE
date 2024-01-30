@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const SearchController = require('../controllers/search-controller');
 
-router.get('/search/:userId', (req, res) => {
-  res.json('검색 로직 작성');
+router.get(
+  '/search/:userId',
+  SearchController.getUserInfo
   // #swagger.tags = ['SEARCH']
   // #swagger.summary = '유저 검색'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 module.exports = router;
 
