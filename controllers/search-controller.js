@@ -2,7 +2,7 @@ const searchService = require('../services/search-service');
 
 module.exports = {
   getUserInfo: async (req, res) => {
-    const getReq = req.params.userId;
+    const getReq = req.params.nickname;
     const setRes = await searchService.getUserInfo({ getReq }).catch(err => {
       console.log(err);
       res.status(500).json({

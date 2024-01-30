@@ -3,7 +3,7 @@ const router = express.Router();
 const SearchController = require('../controllers/search-controller');
 
 router.get(
-  '/search/:userId',
+  '/search/:nickname',
   SearchController.getUserInfo
   // #swagger.tags = ['SEARCH']
   // #swagger.summary = '유저 검색'
