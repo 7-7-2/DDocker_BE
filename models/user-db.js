@@ -17,15 +17,6 @@ const setUserInit = async req => {
   getConn.release();
 };
 
-const getUserInfo = async req => {
-  const sql = 'SELECT id, nickname, brand, sum FROM user WHERE id = ?';
-  const conn = await db();
-  const getConn = await conn.getConnection();
-  const resault = await getConn.query(sql, req).catch(err => console.log(err));
-  getConn.release();
-  return resault[0][0]['nickname'] ? resault : null;
-};
-
 const getUserAuthInfo = async req => {
   const sql = 'SELECT COUNT(*), id FROM user WHERE useremail = ? AND social= ?';
   const conn = await db();
@@ -36,4 +27,32 @@ const getUserAuthInfo = async req => {
   return signInInfo['COUNT(*)'] ? signInInfo['id'] : null;
 };
 
-module.exports = { setUserInit, setUserOauth, getUserInfo, getUserAuthInfo };
+const getUserInfo = async req => {
+  const sql = 'SELECT id, nickname, brand, sum FROM user WHERE id = ?';
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const resault = await getConn.query(sql, req).catch(err => console.log(err));
+  getConn.release();
+  return resault[0][0]['nickname'] ? resault : null;
+};
+
+const patchUserInfo = async req => {
+  const patchInfo = [];
+  for (const [key, value] of Object.entries(req[0])) {
+    const update = `${key} = '${value}'`;
+    patchInfo.push(update);
+  }
+  const sql = `UPDATE user SET ${patchInfo} WHERE id = ${req[1]}`;
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  await getConn.query(sql).catch(err => console.log(err));
+  getConn.release();
+};
+
+module.exports = {
+  patchUserInfo,
+  setUserInit,
+  setUserOauth,
+  getUserInfo,
+  getUserAuthInfo
+};
