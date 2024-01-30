@@ -12,5 +12,16 @@ module.exports = {
         });
       });
     return res.status(200).json({ setRes });
+  },
+
+  getDaySum: async (req, res) => {
+    const getReq = req.params.userId;
+    const setRes = await coffeeService.getDaySum({ getReq }).catch(err => {
+      res.status(500).json({
+        message: err
+      });
+    });
+
+    return res.status(200).json({ setRes });
   }
 };
