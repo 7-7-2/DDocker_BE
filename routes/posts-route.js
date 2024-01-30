@@ -60,32 +60,35 @@ router.post(
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
-router.delete('/posts/:postId/comments/:commentId', (req, res) => {
-  res.json('댓글 삭제');
+router.delete(
+  '/posts/:postId/comments/:commentId',
+  errorHandler(postController.deleteComment)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '댓글 삭제'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
-router.post('/posts/reply', (req, res) => {
-  res.json('답글 작성');
+router.post(
+  '/posts/:commentId/reply',
+  errorHandler(postController.replyComment)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '답글 작성'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
-router.delete('/posts/reply/:replyId', (req, res) => {
-  res.json('답글 삭제');
+router.delete(
+  '/posts/reply/:replyId',
+  errorHandler(postController.deleteReply)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '답글 삭제'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 router.get('/posts/popular', (req, res) => {
   res.json('인기 브랜드 순위 조회');

@@ -381,13 +381,21 @@
         }
       }
     },
-    "/posts/reply": {
+    "/posts/{commentId}/reply": {
       "post": {
         "tags": [
           "POSTS"
         ],
         "summary": "답글 작성",
         "description": "",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
