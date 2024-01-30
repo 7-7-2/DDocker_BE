@@ -1,20 +1,10 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
-const {
-  DB_HOST,
-  DB_PORT,
-  DB_USER,
-  DB_PASSWORD,
-  DB_SCHEMA
-} = require('../config/index');
+const config = require('../config/db-config');
 
 const conn = async () => {
   const connection = mysql.createPool({
-    host: DB_HOST,
-    port: Number(DB_PORT),
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_SCHEMA,
+    ...config,
     connectionLimit: 10
   });
   return connection;
