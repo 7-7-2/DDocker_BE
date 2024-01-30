@@ -24,15 +24,17 @@ router.post(
 
 router
   .route('/users/:userId/userInfo')
-  .patch((req, res) => {
-    res.json('EDIT 페이지 프로필 정보 수정');
+  .patch(
+    AuthMiddleware.verifyToken,
+    userController.editProfile
     // #swagger.tags = ['USERS']
     // #swagger.summary = 'EDIT 페이지 프로필 정보 수정'
     // #swagger.responses[200] = { description: 'OK' }
     // #swagger.responses[400] = { description: 'Bad Request' }
     // #swagger.responses[500] = { description: 'Internal Server Error' }
-  })
+  )
   .get(
+    AuthMiddleware.verifyToken,
     userController.getUserInfo
     //   (req, res) => {
     //   res.json('프로필 페이지 상단 정보');

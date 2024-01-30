@@ -165,6 +165,11 @@ const getAccessToken = async id => {
   return jwt.sign(user, ACCESS_TOKEN_SECRET);
 };
 
+// EDIT USER PROFILE
+const patchUserProfile = async req => {
+  await userDB.patchUserInfo(req);
+};
+
 module.exports = {
   setUserInit,
   setUserOauth,
@@ -173,5 +178,6 @@ module.exports = {
   getUserInfo,
   getGoogleAuth,
   kakaoSignIn,
-  getKakaoAuth
+  getKakaoAuth,
+  patchUserProfile
 };
