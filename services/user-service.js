@@ -130,11 +130,11 @@ const setUserOauth = async req => {
   // 가입된 정보가 없을때
   if (!userId) {
     await userDB.setUserOauth(req);
-    const res = await userDB.getUserAuthInfo([email, social]);
-    return res;
+    const userId = await userDB.getUserAuthInfo([email, social]);
+    return await getAccessToken(userId);
   }
 
-  return userId;
+  return await getAccessToken(userId);
 };
 
 // DDOCKER SIGN UP
@@ -143,30 +143,26 @@ const setUserInit = async req => {
 };
 
 // USER INFO
-const getUserInfo = async id => {
-  const result = await userDB.getUserInfo(id);
+const getUserInfo = async userId => {
+  const result = await userDB.getUserInfo(userId);
   return result;
 };
 
 // DDOCKER ACCESS_TOKEN
-const getAccessToken = async id => {
-  const signInInfo = await getUserInfo(id);
-
-  if (!signInInfo) {
-    return null;
-  }
-
-  const user = {
-    nickname: await signInInfo[0][0].nickname,
-    userId: await signInInfo[0][0].id
-  };
-
+const getAccessToken = async userId => {
+  const user = { userId };
   return jwt.sign(user, ACCESS_TOKEN_SECRET);
 };
 
 // EDIT USER PROFILE
 const patchUserProfile = async req => {
   await userDB.patchUserInfo(req);
+};
+
+// CHECK USER NICKNAME
+const checkUserNickname = async req => {
+  const resault = await userDB.checkUserNickname(req);
+  return resault;
 };
 
 module.exports = {
@@ -178,5 +174,6 @@ module.exports = {
   getGoogleAuth,
   kakaoSignIn,
   getKakaoAuth,
-  patchUserProfile
+  patchUserProfile,
+  checkUserNickname
 };

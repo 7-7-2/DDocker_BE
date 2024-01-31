@@ -28,7 +28,7 @@ const getUserAuthInfo = async req => {
 };
 
 const getUserInfo = async req => {
-  const sql = 'SELECT id, nickname, brand, sum FROM user WHERE id = ?';
+  const sql = 'SELECT nickname, brand, sum, profileUrl FROM user WHERE id = ?';
   const conn = await db();
   const getConn = await conn.getConnection();
   const resault = await getConn.query(sql, req).catch(err => console.log(err));
@@ -49,10 +49,20 @@ const patchUserInfo = async req => {
   getConn.release();
 };
 
+const checkUserNickname = async req => {
+  const sql = `SELECT COUNT(*) FROM user WHERE nickname = '${req}'`;
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const resault = await getConn.query(sql).catch(err => console.log(err));
+  getConn.release();
+  return resault[0][0]['COUNT(*)'] ? true : false;
+};
+
 module.exports = {
   patchUserInfo,
   setUserInit,
   setUserOauth,
   getUserInfo,
-  getUserAuthInfo
+  getUserAuthInfo,
+  checkUserNickname
 };
