@@ -36,7 +36,8 @@ const kakaoRedirect = async (req, res) => {
 
 const setInitForm = async (req, res) => {
   const body = await req.body;
-  const initReq = [body.nickName, body.gender, body.brand, Number(body.id)];
+  const userId = Number(body.id);
+  const initReq = [body.nickName, body.gender, body.brand, userId];
   await userService.setUserInit(initReq);
   const accessToken = await userService.getAccessToken(userId);
   return accessToken && res.status(200).json({ accessToken: accessToken });

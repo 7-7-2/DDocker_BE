@@ -140,7 +140,6 @@ const setUserOauth = async req => {
 // DDOCKER SIGN UP
 const setUserInit = async req => {
   await userDB.setUserInit(req);
-  await userDB.getAcessToken(userInfo);
 };
 
 // USER INFO
