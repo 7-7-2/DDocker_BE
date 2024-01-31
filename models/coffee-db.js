@@ -46,9 +46,9 @@ exports.getDaySum = async ({ getReq }) => {
     return row;
   };
 
-  const resultByYear = await getCoffeeInfoByYear({ getReq, time });
-  const resultByMonth = await getCoffeeInfoByMonth({ getReq, time });
-  const resultByWeek = await getCoffeeInfoByWeek({ getReq, time });
+  const resultByYear = await getCoffeeInfoByYear({ getReq });
+  const resultByMonth = await getCoffeeInfoByMonth({ getReq });
+  const resultByWeek = await getCoffeeInfoByWeek({ getReq });
 
   getConn.release();
   return { resultByYear, resultByMonth, resultByWeek };
