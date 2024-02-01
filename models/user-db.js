@@ -56,9 +56,18 @@ const checkUserNickname = async req => {
   const sql = `SELECT COUNT(*) FROM user WHERE nickname = '${req}'`;
   const conn = await db();
   const getConn = await conn.getConnection();
-  const resault = await getConn.query(sql).catch(err => console.log(err));
+  const result = await getConn.query(sql).catch(err => console.log(err));
   getConn.release();
-  return resault[0][0]['COUNT(*)'] ? true : false;
+  return result[0][0]['COUNT(*)'] ? true : false;
+};
+
+const getUserPosts = async req => {
+  const sql = `SELECT * FROM post WHERE user_id = '${req}'`;
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const result = await getConn.query(sql).catch(err => console.log(err));
+  getConn.release();
+  return result;
 };
 
 module.exports = {
@@ -67,5 +76,6 @@ module.exports = {
   setUserOauth,
   getUserInfo,
   getUserAuthInfo,
-  checkUserNickname
+  checkUserNickname,
+  getUserPosts
 };
