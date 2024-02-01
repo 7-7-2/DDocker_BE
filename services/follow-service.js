@@ -21,6 +21,8 @@ module.exports = {
     const result = await followDB.checkFollowing(req);
     return result
       ? result
-      : Promise.reject('Failed to check if following or not');
+      : result === 0
+        ? false
+        : Promise.reject('Failed to check if following or not');
   }
 };

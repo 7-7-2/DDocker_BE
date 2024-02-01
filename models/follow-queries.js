@@ -14,7 +14,7 @@ const queries = {
   getFollowingList: query.buildGetFollowList('following'),
   getFollowerList: query.buildGetFollowList('follower'),
   checkFollowing: `SELECT 
-  following_user_id, followed_user_id
+  COUNT(*)
   FROM follows
   WHERE following_user_id = ? AND followed_user_id = ?`
 };
