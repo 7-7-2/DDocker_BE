@@ -38,10 +38,9 @@ exports.getFollowerList = async postReq => {
   return data && data;
 };
 exports.checkFollowing = async postReq => {
-  //PARAMS : [ing_id, ed_id]
   const [myId, targetId] = await postReq;
   const params = [myId, targetId];
   const result = await connectAndQuery(query.checkFollowing, params);
-  const data = result[0];
-  return data && data;
+  const data = result[0][0]['COUNT(*)'];
+  return data !== 0 ? true : 0;
 };

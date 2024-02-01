@@ -3,7 +3,7 @@ const FollowService = require('../services/follow-service');
 // 1. 유저 팔로우
 exports.followUser = async (req, res) => {
   // req.userId;
-  const postReq = [req.body.following_user_id, req.params.userId];
+  const postReq = [req.userId, req.params.userId];
   const postRes = FollowService.followUser(postReq);
   return (
     postRes &&
@@ -12,7 +12,7 @@ exports.followUser = async (req, res) => {
 };
 // 2. 유저 언팔로우
 exports.unfollowUser = async (req, res) => {
-  const postReq = [req.body.following_user_id, req.params.userId];
+  const postReq = [req.userId, req.params.userId];
   const postRes = FollowService.unfollowUser(postReq);
   return (
     postRes &&
@@ -39,10 +39,7 @@ exports.getFollowerList = async (req, res) => {
 };
 // 5. 프로필 진입시 팔로잉 중인 유저인지 확인
 exports.checkFollowing = async (req, res) => {
-  const postReq = [req.body.following_user_id, req.params.userId];
-  const postRes = FollowService.checkFollowing(postReq);
-  return (
-    postRes &&
-    res.status(200).json({ data: postRes !== undefined ? postRes : null })
-  );
+  const postReq = [req.userId, req.params.userId];
+  const postRes = await FollowService.checkFollowing(postReq);
+  return res.status(200).json({ data: postRes !== undefined ? postRes : null });
 };
