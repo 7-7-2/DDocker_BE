@@ -14,8 +14,8 @@ const googleRedirect = async (req, res) => {
   const { code } = await req.query;
   try {
     const userInfo = await userService.getGoogleAuth(code);
-    const resault = await userService.setUserOauth(userInfo);
-    return res.status(200).json({ success: 'ok', accessToken: resault });
+    const accessToken = await userService.setUserOauth(userInfo);
+    return res.status(200).json({ success: 'ok', accessToken: accessToken });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -25,8 +25,8 @@ const kakaoRedirect = async (req, res) => {
   const { code } = await req.query;
   try {
     const userInfo = await userService.getKakaoAuth(code);
-    const resault = await userService.setUserOauth(userInfo);
-    return res.status(200).json({ success: 'ok', accessToken: resault });
+    const accessToken = await userService.setUserOauth(userInfo);
+    return res.status(200).json({ success: 'ok', accessToken: accessToken });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -64,8 +64,19 @@ const getUserInfo = async (req, res) => {
 const checkUserNickname = async (req, res) => {
   const { nickname } = req.query;
   try {
-    const resault = await userService.checkUserNickname(nickname);
-    return res.status(200).json({ success: 'ok', data: resault });
+    const result = await userService.checkUserNickname(nickname);
+    return res.status(200).json({ success: 'ok', data: result });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const getUserPosts = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const posts = await userService.getUserPosts(userId);
+    console.log(posts);
+    return res.status(200).json({ success: 'ok', data: posts });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -78,5 +89,6 @@ module.exports = {
   setInitForm,
   getUserInfo,
   editProfile,
-  checkUserNickname
+  checkUserNickname,
+  getUserPosts
 };

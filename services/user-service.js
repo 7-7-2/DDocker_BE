@@ -154,7 +154,8 @@ const getUserInfo = async userId => {
 // DDOCKER ACCESS_TOKEN
 const getAccessToken = async userId => {
   const user = { userId };
-  return jwt.sign(user, ACCESS_TOKEN_SECRET);
+  const accessToken = jwt.sign(user, ACCESS_TOKEN_SECRET);
+  return `Bearer ${accessToken}`;
 };
 
 // EDIT USER PROFILE
@@ -164,8 +165,14 @@ const patchUserProfile = async req => {
 
 // CHECK USER NICKNAME
 const checkUserNickname = async req => {
-  const resault = await userDB.checkUserNickname(req);
-  return resault;
+  const result = await userDB.checkUserNickname(req);
+  return result;
+};
+
+//  GET USER POSTS
+const getUserPosts = async userId => {
+  const result = await userDB.getUserPosts(userId);
+  return result;
 };
 
 module.exports = {
@@ -178,5 +185,6 @@ module.exports = {
   kakaoSignIn,
   getKakaoAuth,
   patchUserProfile,
-  checkUserNickname
+  checkUserNickname,
+  getUserPosts
 };
