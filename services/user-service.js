@@ -175,6 +175,14 @@ const getUserPosts = async userId => {
   return result;
 };
 
+//  GET USER FOLLOWES COUNT
+const getUserFollowsCount = async userId => {
+  const following = await userDB.getUserFollowingCount(userId);
+  const followed = await userDB.getUserFollowedCount(userId);
+  const result = { following: following, followed: followed };
+  return result;
+};
+
 module.exports = {
   setUserInit,
   setUserOauth,
@@ -186,5 +194,6 @@ module.exports = {
   getKakaoAuth,
   patchUserProfile,
   checkUserNickname,
-  getUserPosts
+  getUserPosts,
+  getUserFollowsCount
 };
