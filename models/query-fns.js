@@ -32,13 +32,13 @@ const buildGetFollowList = followType => {
   const filterFrom =
     followType === 'following' ? 'following_user_id' : 'followed_user_id';
   return `
-  SELECT a.profile_url, a.nickname, a.sum
+  SELECT a.profileUrl, a.nickname, a.sum
   FROM user a
-  LEFT JOIN(  SELECT b.${listType}
+  INNER JOIN(  SELECT b.${listType}
               FROM follows b
-              LEFT JOIN user a
-              ON a.public_id = b.${filterFrom}
-              WHERE a.public_id = ?
+              LEFT JOIN user c
+              ON c.public_id = b.${filterFrom}
+              WHERE c.public_id = ?
             ) list
             WHERE list.${listType} = a.public_id`;
 };

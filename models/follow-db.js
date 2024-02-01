@@ -24,15 +24,15 @@ exports.unfollowUser = async postReq => {
   return data && data;
 };
 exports.getFollowingList = async postReq => {
-  const [myId, targetId] = await postReq;
-  const params = [myId, targetId];
+  const targetId = await postReq;
+  const params = [targetId];
   const result = await connectAndQuery(query.getFollowingList, params);
   const data = result[0];
   return data && data;
 };
 exports.getFollowerList = async postReq => {
-  const [myId, targetId] = await postReq;
-  const params = [myId, targetId];
+  const targetId = await postReq;
+  const params = [targetId];
   const result = await connectAndQuery(query.getFollowerList, params);
   const data = result[0];
   return data && data;

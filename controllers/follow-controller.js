@@ -4,7 +4,7 @@ const FollowService = require('../services/follow-service');
 exports.followUser = async (req, res) => {
   // req.userId;
   const postReq = [req.userId, req.params.userId];
-  const postRes = FollowService.followUser(postReq);
+  const postRes = await FollowService.followUser(postReq);
   return (
     postRes &&
     res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
@@ -13,7 +13,7 @@ exports.followUser = async (req, res) => {
 // 2. 유저 언팔로우
 exports.unfollowUser = async (req, res) => {
   const postReq = [req.userId, req.params.userId];
-  const postRes = FollowService.unfollowUser(postReq);
+  const postRes = await FollowService.unfollowUser(postReq);
   return (
     postRes &&
     res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
@@ -22,7 +22,7 @@ exports.unfollowUser = async (req, res) => {
 // 3. 유저의(:userId) 팔로잉 목록 확인
 exports.getFollowingList = async (req, res) => {
   const postReq = req.params.userId;
-  const postRes = FollowService.getFollowingList(postReq);
+  const postRes = await FollowService.getFollowingList(postReq);
   return (
     postRes &&
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
@@ -31,7 +31,7 @@ exports.getFollowingList = async (req, res) => {
 // 4. 유저의(:userId) 팔로우 목록 확인
 exports.getFollowerList = async (req, res) => {
   const postReq = req.params.userId;
-  const postRes = FollowService.getFollowerList(postReq);
+  const postRes = await FollowService.getFollowerList(postReq);
   return (
     postRes &&
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
