@@ -54,7 +54,8 @@ const editProfile = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
   try {
-    const userInfo = await userService.getUserInfo(req.userId);
+    const userId = req.params.userId;
+    const userInfo = await userService.getUserInfo(userId);
     return userInfo && res.status(200).json({ success: 'ok', data: userInfo });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
@@ -75,8 +76,17 @@ const getUserPosts = async (req, res) => {
   try {
     const userId = req.params.userId;
     const posts = await userService.getUserPosts(userId);
-    console.log(posts);
     return res.status(200).json({ success: 'ok', data: posts });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const getUserFollowsCount = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const result = await userService.getUserFollowsCount(userId);
+    return res.status(200).json({ success: 'ok', data: result });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -90,5 +100,6 @@ module.exports = {
   getUserInfo,
   editProfile,
   checkUserNickname,
-  getUserPosts
+  getUserPosts,
+  getUserFollowsCount
 };
