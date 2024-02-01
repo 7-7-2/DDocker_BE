@@ -51,14 +51,16 @@ router.get('/users/:userId/follow', (req, res) => {
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 });
 
-router.get('/users/:userId/posts', (req, res) => {
-  res.json('유저 작성 게시물 그리드');
+router.get(
+  '/users/:userId/posts',
+  AuthMiddleware.verifyToken,
+  userController.getUserPosts
   // #swagger.tags = ['USERS']
   // #swagger.summary = '유저 작성 게시물 그리드'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 module.exports = router;
 
