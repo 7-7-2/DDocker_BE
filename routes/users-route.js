@@ -3,12 +3,43 @@ const router = express.Router();
 const AuthMiddleware = require('../middlewares/authMiddleware');
 const userController = require('../controllers/user-controller');
 
-// Oauth
-router.get('/users/signIn', userController.signIn);
-router.get('/users/google/redirect', userController.googleRedirect);
-router.get('/users/kakao/redirect', userController.kakaoRedirect);
+router.get(
+  '/users/signIn',
+  userController.signIn
+  // #swagger.tags = ['USERS']
+  // #swagger.summary = '소셜 로그인'
+  // #swagger.responses[200] = { description: 'OK' }
+  // #swagger.responses[400] = { description: 'Bad Request' }
+  // #swagger.responses[500] = { description: 'Internal Server Error' }
+);
+router.get(
+  '/users/google/redirect',
+  userController.googleRedirect
+  // #swagger.tags = ['USERS']
+  // #swagger.summary = '구글 로그인 인가/유저 정보 조회'
+  // #swagger.responses[200] = { description: 'OK' }
+  // #swagger.responses[400] = { description: 'Bad Request' }
+  // #swagger.responses[500] = { description: 'Internal Server Error' }
+);
+router.get(
+  '/users/kakao/redirect',
+  userController.kakaoRedirect
+  // #swagger.tags = ['USERS']
+  // #swagger.summary = '카카오 로그인 인가/유저 정보 조회'
+  // #swagger.responses[200] = { description: 'OK' }
+  // #swagger.responses[400] = { description: 'Bad Request' }
+  // #swagger.responses[500] = { description: 'Internal Server Error' }
+);
 
-router.get('/users/check', userController.checkUserNickname);
+router.get(
+  '/users/check',
+  userController.checkUserNickname
+  // #swagger.tags = ['USERS']
+  // #swagger.summary = '닉네임 중복 검사'
+  // #swagger.responses[200] = { description: 'OK' }
+  // #swagger.responses[400] = { description: 'Bad Request' }
+  // #swagger.responses[500] = { description: 'Internal Server Error' }
+);
 
 router.post(
   '/users',
@@ -21,35 +52,37 @@ router.post(
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
-router
-  .route('/users/userInfo')
-  .patch(
-    AuthMiddleware.verifyToken,
-    userController.editProfile
-    // #swagger.tags = ['USERS']
-    // #swagger.summary = 'EDIT 페이지 프로필 정보 수정'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  )
-  .get(
-    AuthMiddleware.verifyToken,
-    userController.getUserInfo
-    // #swagger.tags = ['USERS']
-    // #swagger.summary = '프로필 페이지 상단 정보 (유저이름, 프로필사진, 카페인 정보)'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  );
+router.patch(
+  '/users/userInfo',
+  AuthMiddleware.verifyToken,
+  userController.editProfile
+  // #swagger.tags = ['USERS']
+  // #swagger.summary = 'EDIT 페이지 프로필 정보 수정'
+  // #swagger.responses[200] = { description: 'OK' }
+  // #swagger.responses[400] = { description: 'Bad Request' }
+  // #swagger.responses[500] = { description: 'Internal Server Error' })
+);
 
-router.get('/users/:userId/follow', (req, res) => {
-  res.json('프로필 페이지용 팔로우/팔로잉 카운트');
+router.get(
+  '/users/:userId/userInfo',
+  AuthMiddleware.verifyToken,
+  userController.getUserInfo
+  // #swagger.tags = ['USERS']
+  // #swagger.summary = '프로필 페이지 상단 정보 (유저이름, 프로필사진, 카페인 정보)'
+  // #swagger.responses[200] = { description: 'OK' }
+  // #swagger.responses[400] = { description: 'Bad Request' }
+  // #swagger.responses[500] = { description: 'Internal Server Error' }
+);
+
+router.get(
+  '/users/:userId/follow',
+  userController.getUserFollowsCount
   // #swagger.tags = ['USERS']
   // #swagger.summary = '프로필 페이지용 팔로우/팔로잉 카운트'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 router.get(
   '/users/:userId/posts',
@@ -63,5 +96,3 @@ router.get(
 );
 
 module.exports = router;
-
-// routes => 서버에 요청이 들어올 때 URI의 path에 따라 필요한 controller로 이어주는 역할만 담당
