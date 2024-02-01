@@ -71,3 +71,21 @@ exports.deleteReply = async (req, res) => {
     res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
   );
 };
+// 9. 포스트 진입시 댓글목록 조회
+exports.getComments = async (req, res) => {
+  const postReq = req.params.postId;
+  const postRes = await PostService.getComments(postReq);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};
+// 10. 댓글 하단 더보기 클릭시 답글목록 조회
+exports.getReply = async (req, res) => {
+  const postReq = req.params.commentId;
+  const postRes = await PostService.getReply(postReq);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};

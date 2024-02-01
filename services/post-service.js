@@ -35,5 +35,13 @@ module.exports = {
   deleteReply: async (req, res) => {
     const result = await postsDB.deleteReply(req);
     return result ? result : Promise.reject('Failed to delete reply');
+  },
+  getComments: async (req, res) => {
+    const result = await postsDB.getComments(req);
+    return result ? result : Promise.reject('Failed to get comments');
+  },
+  getReply: async (req, res) => {
+    const result = await postsDB.getReply(req);
+    return result ? result : Promise.reject('Failed to get reply');
   }
 };

@@ -50,15 +50,24 @@ router.post(
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
-router.post(
-  '/posts/:postId/comments',
-  errorHandler(postController.writeComment)
-  // #swagger.tags = ['POSTS']
-  // #swagger.summary = '댓글 작성'
-  // #swagger.responses[200] = { description: 'OK' }
-  // #swagger.responses[400] = { description: 'Bad Request' }
-  // #swagger.responses[500] = { description: 'Internal Server Error' }
-);
+router
+  .route('/posts/:postId/comments')
+  .post(
+    errorHandler(postController.writeComment)
+    // #swagger.tags = ['POSTS']
+    // #swagger.summary = '댓글 작성'
+    // #swagger.responses[200] = { description: 'OK' }
+    // #swagger.responses[400] = { description: 'Bad Request' }
+    // #swagger.responses[500] = { description: 'Internal Server Error' }
+  )
+  .get(
+    errorHandler(postController.getComments)
+    // #swagger.tags = ['POSTS']
+    // #swagger.summary = '게시글 댓글 목록 조회'
+    // #swagger.responses[200] = { description: 'OK' }
+    // #swagger.responses[400] = { description: 'Bad Request' }
+    // #swagger.responses[500] = { description: 'Internal Server Error' }
+  );
 
 router.delete(
   '/posts/:postId/comments/:commentId',
@@ -70,15 +79,24 @@ router.delete(
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
-router.post(
-  '/posts/:commentId/reply',
-  errorHandler(postController.replyComment)
-  // #swagger.tags = ['POSTS']
-  // #swagger.summary = '답글 작성'
-  // #swagger.responses[200] = { description: 'OK' }
-  // #swagger.responses[400] = { description: 'Bad Request' }
-  // #swagger.responses[500] = { description: 'Internal Server Error' }
-);
+router
+  .route('/posts/:commentId/reply')
+  .post(
+    errorHandler(postController.replyComment)
+    // #swagger.tags = ['POSTS']
+    // #swagger.summary = '답글 작성'
+    // #swagger.responses[200] = { description: 'OK' }
+    // #swagger.responses[400] = { description: 'Bad Request' }
+    // #swagger.responses[500] = { description: 'Internal Server Error' }
+  )
+  .get(
+    errorHandler(postController.getReply)
+    // #swagger.tags = ['POSTS']
+    // #swagger.summary = '댓글에서 더보기 클릭시 답글 조회'
+    // #swagger.responses[200] = { description: 'OK' }
+    // #swagger.responses[400] = { description: 'Bad Request' }
+    // #swagger.responses[500] = { description: 'Internal Server Error' }
+  );
 
 router.delete(
   '/posts/reply/:replyId',
