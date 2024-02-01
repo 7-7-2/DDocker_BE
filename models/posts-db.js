@@ -1,5 +1,6 @@
 const db = require('../loaders/db');
 const PostQueries = require('./posts-queries');
+const { nanoid } = require('nanoid');
 
 const connectAndQuery = async (...queryAndParam) => {
   const conn = await db();
@@ -27,7 +28,8 @@ exports.registerPost = async postReq => {
     size,
     shot,
     caffeine,
-    photo
+    photo,
+    nanoid()
   ];
   const result = await connectAndQuery(PostQueries.registerPost, params);
   const data = result[0];
@@ -78,6 +80,22 @@ exports.deleteReply = async postReq => {
   await postReq;
   const params = [postReq];
   const result = await connectAndQuery(PostQueries.deleteReply, params);
+  const data = result[0];
+  return data && data;
+};
+
+exports.getComments = async postReq => {
+  await postReq;
+  const params = [postReq];
+  const result = await connectAndQuery(PostQueries.getComments, params);
+  const data = result[0];
+  return data && data;
+};
+
+exports.getReply = async postReq => {
+  await postReq;
+  const params = [postReq];
+  const result = await connectAndQuery(PostQueries.getReply, params);
   const data = result[0];
   return data && data;
 };
