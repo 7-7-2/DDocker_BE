@@ -5,9 +5,9 @@ exports.getCoffeeInfoSum = async ({ getReq }) => {
   const getConn = await conn.getConnection();
   const params = [getReq];
   const sql = `
-    SELECT brand, SUM(caffeine)
+    SELECT brand, SUM(caffeine), COUNT(*)
     FROM post
-    WHERE user_id = ?
+    WHERE user_id = ? AND DATE(created_at) = CURRENT_DATE
     `;
   const [row] = await getConn.query(sql, params);
   getConn.release();
@@ -22,7 +22,7 @@ exports.getDaySum = async ({ getReq }) => {
     const sql = `
         SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
         FROM post
-        WHERE user_id = ? AND YEAR(post.created_at) = YEAR(CURDATE())
+        WHERE user_id = ? AND YEAR(created_at) = YEAR(CURDATE())
     `;
     const [row] = await getConn.query(sql, params);
     return row;
@@ -31,7 +31,7 @@ exports.getDaySum = async ({ getReq }) => {
     const sql = `
         SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
         FROM post
-        WHERE user_id = ? AND MONTH(post.created_at) = MONTH(CURDATE())
+        WHERE user_id = ? AND MONTH(created_at) = MONTH(CURDATE())
     `;
     const [row] = await getConn.query(sql, params);
     return row;
@@ -40,7 +40,7 @@ exports.getDaySum = async ({ getReq }) => {
     const sql = `
         SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
         FROM post
-        WHERE user_id = ? AND WEEK(post.created_at) = WEEK(CURDATE())
+        WHERE user_id = ? AND WEEK(created_at) = WEEK(CURDATE())
     `;
     const [row] = await getConn.query(sql, params);
     return row;
