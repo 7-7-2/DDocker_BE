@@ -10,7 +10,7 @@ exports.getPostDetail = async (req, res) => {
 };
 // 2. 포스트 등록(+JWT 인증)
 exports.registerPost = async (req, res) => {
-  const postReq = req.body;
+  const postReq = [req.userId, req.body];
   const postRes = await PostService.registerPost(postReq);
   return (
     postRes &&
@@ -37,7 +37,7 @@ exports.updatePost = async (req, res) => {
 };
 // 5. 댓글 작성(+JWT 인증)
 exports.writeComment = async (req, res) => {
-  const postReq = [req.params.postId, req.body];
+  const postReq = [req.userId, req.params.postId, req.body];
   const postRes = await PostService.writeComment(postReq);
   return (
     postRes &&
@@ -46,7 +46,7 @@ exports.writeComment = async (req, res) => {
 };
 // 6. 댓글 삭제(+JWT 인증)
 exports.deleteComment = async (req, res) => {
-  const postReq = [req.params.postId, req.params.commentId];
+  const postReq = [req.userId, req.params.postId, req.params.commentId];
   const postRes = await PostService.deleteComment(postReq);
   return (
     postRes &&
@@ -55,7 +55,7 @@ exports.deleteComment = async (req, res) => {
 };
 // 7. 답글 작성(+JWT 인증)
 exports.replyComment = async (req, res) => {
-  const postReq = [req.params.commentId, req.body];
+  const postReq = [req.userId, req.params.commentId, req.body];
   const postRes = await PostService.replyComment(postReq);
   return (
     postRes &&
@@ -64,7 +64,7 @@ exports.replyComment = async (req, res) => {
 };
 // 8. 답글 삭제(+JWT 인증)
 exports.deleteReply = async (req, res) => {
-  const postReq = req.params.replyId;
+  const postReq = [req.userId, req.params.replyId];
   const postRes = await PostService.deleteReply(postReq);
   return (
     postRes &&
