@@ -62,12 +62,32 @@ const checkUserNickname = async req => {
 };
 
 const getUserPosts = async req => {
-  const sql = `SELECT * FROM post WHERE user_id = '${req}'`;
+  const sql = `SELECT photo, public_id FROM post WHERE user_id = '${req}'`;
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql).catch(err => console.log(err));
   getConn.release();
   return result;
+};
+
+const getUserFollowingCount = async req => {
+  const sql = `SELECT COUNT(*) FROM follows WHERE following_user_id = '${req}'`;
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const result = await getConn.query(sql).catch(err => console.log(err));
+  const count = result[0][0]['COUNT(*)'];
+  getConn.release();
+  return count;
+};
+
+const getUserFollowedCount = async req => {
+  const sql = `SELECT COUNT(*) FROM follows WHERE followed_user_id = '${req}'`;
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const result = await getConn.query(sql).catch(err => console.log(err));
+  const count = result[0][0]['COUNT(*)'];
+  getConn.release();
+  return count;
 };
 
 module.exports = {
@@ -77,5 +97,7 @@ module.exports = {
   getUserInfo,
   getUserAuthInfo,
   checkUserNickname,
-  getUserPosts
+  getUserPosts,
+  getUserFollowingCount,
+  getUserFollowedCount
 };
