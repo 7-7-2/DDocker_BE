@@ -23,7 +23,7 @@ const buildPatchQuery = async (postId, updateTo) => {
     ''
   );
   const patchProps = Object.keys(updateTo).length !== 0 ? joinedProps : null;
-  return `UPDATE post SET ${patchProps} WHERE id = ${postId}`;
+  return `UPDATE post SET ${patchProps} WHERE public_id='${postId}'`;
 };
 
 const buildGetFollowList = followType => {

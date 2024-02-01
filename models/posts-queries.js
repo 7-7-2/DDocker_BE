@@ -21,13 +21,13 @@ const queries = {
   ]),
   deletePost: query.buildDelete('post', ['public_id']),
   writeComment: query.buildInsert('comment', ['user_id', 'post_id', 'content']),
-  deleteComment: query.buildDelete('comment', ['post_id', 'id']),
+  deleteComment: query.buildDelete('comment', ['user_id', 'post_id', 'id']),
   replyComment: query.buildInsert('reply', [
     'user_id',
     'comment_id',
     'content'
   ]),
-  deleteReply: query.buildDelete('reply', ['id']),
+  deleteReply: query.buildDelete('reply', ['user_id', 'id']),
   getComments: `SELECT 
   u.profileUrl, u.nickname, c.content, c.created_at 
   FROM user u

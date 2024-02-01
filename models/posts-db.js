@@ -18,10 +18,10 @@ exports.getPostDetail = async postReq => {
 };
 
 exports.registerPost = async postReq => {
-  const { user_id, brand, menu, post_title, size, shot, caffeine, photo } =
-    await postReq;
+  const { brand, menu, post_title, size, shot, caffeine, photo } =
+    await postReq[1];
   const params = [
-    user_id,
+    postReq[0],
     brand,
     menu,
     post_title,
@@ -53,34 +53,34 @@ exports.updatePost = async postReq => {
 };
 
 exports.writeComment = async postReq => {
-  const [postId, comment] = await postReq;
-  const params = [comment.user_id, postId, comment.content];
+  const [userId, postId, comment] = await postReq;
+  const params = [userId, postId, comment.content];
   const result = await connectAndQuery(PostQueries.writeComment, params);
   const data = result[0];
   return data && data;
 };
 
 exports.deleteComment = async postReq => {
-  const [postId, commentId] = await postReq;
-  const params = [postId, commentId];
+  const [userId, postId, commentId] = await postReq;
+  const params = [userId, postId, commentId];
   const result = await connectAndQuery(PostQueries.deleteComment, params);
-  const data = result[0];
+  const data = result[0].affectedRows;
   return data && data;
 };
 
 exports.replyComment = async postReq => {
-  const [commentId, reply] = await postReq;
-  const params = [reply.user_id, commentId, reply.content];
+  const [userId, commentId, reply] = await postReq;
+  const params = [userId, commentId, reply.content];
   const result = await connectAndQuery(PostQueries.replyComment, params);
   const data = result[0];
   return data && data;
 };
 
 exports.deleteReply = async postReq => {
-  await postReq;
-  const params = [postReq];
+  const [userId, replyId] = await postReq;
+  const params = [userId, replyId];
   const result = await connectAndQuery(PostQueries.deleteReply, params);
-  const data = result[0];
+  const data = result[0].affectedRows;
   return data && data;
 };
 
