@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/posts-controller');
 const errorHandler = require('../middlewares/errorHandler');
+const AuthMiddleware = require('../middlewares/authMiddleware');
 
 router.get(
   '/posts'
@@ -24,6 +25,7 @@ router
     // #swagger.responses[500] = { description: 'Internal Server Error' }
   )
   .patch(
+    AuthMiddleware.verifyToken,
     errorHandler(postController.updatePost)
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '게시글 수정'
@@ -32,6 +34,7 @@ router
     // #swagger.responses[500] = { description: 'Internal Server Error' }
   )
   .delete(
+    AuthMiddleware.verifyToken,
     errorHandler(postController.deletePost)
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '게시글 삭제'
@@ -42,6 +45,7 @@ router
 
 router.post(
   '/posts/register',
+  AuthMiddleware.verifyToken,
   errorHandler(postController.registerPost)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '게시글 작성'
@@ -53,6 +57,7 @@ router.post(
 router
   .route('/posts/:postId/comments')
   .post(
+    AuthMiddleware.verifyToken,
     errorHandler(postController.writeComment)
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '댓글 작성'
@@ -71,6 +76,7 @@ router
 
 router.delete(
   '/posts/:postId/comments/:commentId',
+  AuthMiddleware.verifyToken,
   errorHandler(postController.deleteComment)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '댓글 삭제'
@@ -82,6 +88,7 @@ router.delete(
 router
   .route('/posts/:commentId/reply')
   .post(
+    AuthMiddleware.verifyToken,
     errorHandler(postController.replyComment)
     // #swagger.tags = ['POSTS']
     // #swagger.summary = '답글 작성'
@@ -100,6 +107,7 @@ router
 
 router.delete(
   '/posts/reply/:replyId',
+  AuthMiddleware.verifyToken,
   errorHandler(postController.deleteReply)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '답글 삭제'
