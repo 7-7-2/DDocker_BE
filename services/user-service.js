@@ -1,5 +1,6 @@
 const userDB = require('../models/user-db');
 const jwt = require('jsonwebtoken');
+const { nanoid } = require('nanoid');
 
 require('dotenv').config();
 const {
@@ -123,6 +124,8 @@ const getKakaoAuth = async code => {
 const setUserOauth = async req => {
   const email = req[1];
   const social = req[2];
+  const id = nanoid();
+  await req.push(id);
 
   // 가입된 정보가 있을때
   const userId = await userDB.getUserAuthInfo([email, social]);
