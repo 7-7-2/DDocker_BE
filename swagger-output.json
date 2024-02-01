@@ -110,6 +110,32 @@
       }
     },
     "/follow/{userId}": {
+      "get": {
+        "tags": [
+          "FOLLOW"
+        ],
+        "summary": "프로필 진입시 팔로잉 중인 유저인지(:userId) 확인",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "post": {
         "tags": [
           "FOLLOW"
@@ -163,16 +189,16 @@
         }
       }
     },
-    "/follow/{userID}/following": {
+    "/follow/{userId}/following": {
       "get": {
         "tags": [
           "FOLLOW"
         ],
-        "summary": "인증된 사용자가 param:userId의 팔로잉 조회",
+        "summary": "인증된 사용자가 param:userId의 팔로잉 목록 조회",
         "description": "",
         "parameters": [
           {
-            "name": "userID",
+            "name": "userId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -191,16 +217,16 @@
         }
       }
     },
-    "/follow/{userID}/follower": {
+    "/follow/{userId}/follower": {
       "get": {
         "tags": [
           "FOLLOW"
         ],
-        "summary": "인증된 사용자가 param:userId의 팔로잉 조회",
+        "summary": "인증된 사용자가 param:userId의 팔로우 목록 조회",
         "description": "",
         "parameters": [
           {
-            "name": "userID",
+            "name": "userId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -320,6 +346,32 @@
       }
     },
     "/posts/{postId}/comments": {
+      "get": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "게시글 댓글 목록 조회",
+        "description": "",
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "post": {
         "tags": [
           "POSTS"
@@ -382,6 +434,32 @@
       }
     },
     "/posts/{commentId}/reply": {
+      "get": {
+        "tags": [
+          "POSTS"
+        ],
+        "summary": "댓글에서 더보기 클릭시 답글 조회",
+        "description": "",
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
       "post": {
         "tags": [
           "POSTS"

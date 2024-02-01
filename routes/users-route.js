@@ -1,19 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const AuthMiddleware = require('../middlewares/authMiddleware');
-
 const userController = require('../controllers/user-controller');
-
-// middleware 사용 예시
-router.get('/users/test', AuthMiddleware.verifyToken, userController.test);
 
 // Oauth
 router.get('/users/signIn', userController.signIn);
 router.get('/users/google/redirect', userController.googleRedirect);
 router.get('/users/kakao/redirect', userController.kakaoRedirect);
 
+router.get('/users/check', userController.checkUserNickname);
+
 router.post(
   '/users',
+  AuthMiddleware.verifyToken,
   userController.setInitForm
   // #swagger.tags = ['USERS']
   // #swagger.summary = '회원가입 유저 등록'
@@ -23,7 +22,7 @@ router.post(
 );
 
 router
-  .route('/users/:userId/userInfo')
+  .route('/users/userInfo')
   .patch(
     AuthMiddleware.verifyToken,
     userController.editProfile
@@ -36,14 +35,11 @@ router
   .get(
     AuthMiddleware.verifyToken,
     userController.getUserInfo
-    //   (req, res) => {
-    //   res.json('프로필 페이지 상단 정보');
-    //   // #swagger.tags = ['USERS']
-    //   // #swagger.summary = '프로필 페이지 상단 정보 (유저이름, 프로필사진, 카페인 정보)'
-    //   // #swagger.responses[200] = { description: 'OK' }
-    //   // #swagger.responses[400] = { description: 'Bad Request' }
-    //   // #swagger.responses[500] = { description: 'Internal Server Error' }
-    // }
+    // #swagger.tags = ['USERS']
+    // #swagger.summary = '프로필 페이지 상단 정보 (유저이름, 프로필사진, 카페인 정보)'
+    // #swagger.responses[200] = { description: 'OK' }
+    // #swagger.responses[400] = { description: 'Bad Request' }
+    // #swagger.responses[500] = { description: 'Internal Server Error' }
   );
 
 router.get('/users/:userId/follow', (req, res) => {
@@ -55,14 +51,16 @@ router.get('/users/:userId/follow', (req, res) => {
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 });
 
-router.get('/users/:userId/posts', (req, res) => {
-  res.json('유저 작성 게시물 그리드');
+router.get(
+  '/users/:userId/posts',
+  AuthMiddleware.verifyToken,
+  userController.getUserPosts
   // #swagger.tags = ['USERS']
   // #swagger.summary = '유저 작성 게시물 그리드'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 module.exports = router;
 

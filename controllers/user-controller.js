@@ -2,20 +2,21 @@ const userService = require('../services/user-service');
 
 const signIn = async (req, res) => {
   const { social } = req.query;
-  if (social === 'google') await userService.googleSignIn(res);
-  if (social === 'kakao') await userService.kakaoSignIn(res);
+  try {
+    if (social === 'google') await userService.googleSignIn(res);
+    if (social === 'kakao') await userService.kakaoSignIn(res);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 const googleRedirect = async (req, res) => {
   const { code } = await req.query;
   try {
     const userInfo = await userService.getGoogleAuth(code);
-    const userId = await userService.setUserOauth(userInfo);
-    const resault = await userService.getAccessToken(userId);
-    if (!resault) return res.status(201).json({ id: userId });
-    return res.status(200).json({ accessToken: resault });
+    const accessToken = await userService.setUserOauth(userInfo);
+    return res.status(200).json({ success: 'ok', accessToken: accessToken });
   } catch (error) {
-    console.error('Error during authentication:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -24,23 +25,22 @@ const kakaoRedirect = async (req, res) => {
   const { code } = await req.query;
   try {
     const userInfo = await userService.getKakaoAuth(code);
-    const userId = await userService.setUserOauth(userInfo);
-    const resault = await userService.getAccessToken(userId);
-    if (!resault) return res.status(201).json({ id: userId });
-    return res.status(200).json({ accessToken: resault });
+    const accessToken = await userService.setUserOauth(userInfo);
+    return res.status(200).json({ success: 'ok', accessToken: accessToken });
   } catch (error) {
-    console.error('Error during authentication:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
 const setInitForm = async (req, res) => {
-  const body = await req.body;
-  const userId = Number(body.id);
-  const initReq = [body.nickName, body.gender, body.brand, userId];
-  await userService.setUserInit(initReq);
-  const accessToken = await userService.getAccessToken(userId);
-  return accessToken && res.status(200).json({ accessToken: accessToken });
+  try {
+    const body = await req.body;
+    const initReq = [body.nickName, body.gender, body.brand, req.userId];
+    await userService.setUserInit(initReq);
+    return res.status(200).json('success: ok');
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 const editProfile = async (req, res) => {
@@ -53,27 +53,42 @@ const editProfile = async (req, res) => {
 };
 
 const getUserInfo = async (req, res) => {
-  const id = req.params.userId;
   try {
-    const userInfo = await userService.getUserInfo(id);
-    return userInfo && res.status(200).json({ success: ok, data: userInfo });
+    const userInfo = await userService.getUserInfo(req.userId);
+    return userInfo && res.status(200).json({ success: 'ok', data: userInfo });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-// middleware 적용
-const test = async (req, res) => {
-  // middleware에서 req.[name]으로 보낸 JWT payload
-  await res.status(200).json(`${req.userId}, ${req.nickname}`);
+const checkUserNickname = async (req, res) => {
+  const { nickname } = req.query;
+  try {
+    const result = await userService.checkUserNickname(nickname);
+    return res.status(200).json({ success: 'ok', data: result });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const getUserPosts = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const posts = await userService.getUserPosts(userId);
+    console.log(posts);
+    return res.status(200).json({ success: 'ok', data: posts });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 module.exports = {
-  test,
   signIn,
   kakaoRedirect,
   googleRedirect,
   setInitForm,
   getUserInfo,
-  editProfile
+  editProfile,
+  checkUserNickname,
+  getUserPosts
 };

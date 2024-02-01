@@ -12,7 +12,6 @@ const verifyToken = async (req, res, next) => {
     if (err) return res.status(403).json('Forbidden');
     // JWT Payload를 middleware => 사용하고하고자 하는 컨트롤러로 req.[name] 전달
     req.userId = user.userId;
-    req.nickname = user.nickname;
     next();
   });
 };

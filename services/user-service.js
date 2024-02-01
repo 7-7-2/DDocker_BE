@@ -1,5 +1,6 @@
 const userDB = require('../models/user-db');
 const jwt = require('jsonwebtoken');
+const { nanoid } = require('nanoid');
 
 require('dotenv').config();
 const {
@@ -123,6 +124,8 @@ const getKakaoAuth = async code => {
 const setUserOauth = async req => {
   const email = req[1];
   const social = req[2];
+  const id = nanoid();
+  await req.push(id);
 
   // 가입된 정보가 있을때
   const userId = await userDB.getUserAuthInfo([email, social]);
@@ -130,11 +133,11 @@ const setUserOauth = async req => {
   // 가입된 정보가 없을때
   if (!userId) {
     await userDB.setUserOauth(req);
-    const res = await userDB.getUserAuthInfo([email, social]);
-    return res;
+    const userId = await userDB.getUserAuthInfo([email, social]);
+    return await getAccessToken(userId);
   }
 
-  return userId;
+  return await getAccessToken(userId);
 };
 
 // DDOCKER SIGN UP
@@ -143,30 +146,33 @@ const setUserInit = async req => {
 };
 
 // USER INFO
-const getUserInfo = async id => {
-  const result = await userDB.getUserInfo(id);
+const getUserInfo = async userId => {
+  const result = await userDB.getUserInfo(userId);
   return result;
 };
 
 // DDOCKER ACCESS_TOKEN
-const getAccessToken = async id => {
-  const signInInfo = await getUserInfo(id);
-
-  if (!signInInfo) {
-    return null;
-  }
-
-  const user = {
-    nickname: await signInInfo[0][0].nickname,
-    userId: await signInInfo[0][0].id
-  };
-
-  return jwt.sign(user, ACCESS_TOKEN_SECRET);
+const getAccessToken = async userId => {
+  const user = { userId };
+  const accessToken = jwt.sign(user, ACCESS_TOKEN_SECRET);
+  return `Bearer ${accessToken}`;
 };
 
 // EDIT USER PROFILE
 const patchUserProfile = async req => {
   await userDB.patchUserInfo(req);
+};
+
+// CHECK USER NICKNAME
+const checkUserNickname = async req => {
+  const result = await userDB.checkUserNickname(req);
+  return result;
+};
+
+//  GET USER POSTS
+const getUserPosts = async userId => {
+  const result = await userDB.getUserPosts(userId);
+  return result;
 };
 
 module.exports = {
@@ -178,5 +184,7 @@ module.exports = {
   getGoogleAuth,
   kakaoSignIn,
   getKakaoAuth,
-  patchUserProfile
+  patchUserProfile,
+  checkUserNickname,
+  getUserPosts
 };
