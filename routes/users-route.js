@@ -22,7 +22,7 @@ router.post(
 );
 
 router
-  .route('/users/:userId/userInfo')
+  .route('/users/userInfo')
   .patch(
     AuthMiddleware.verifyToken,
     userController.editProfile
