@@ -8,5 +8,10 @@ module.exports = {
   getDaySum: async (req, res) => {
     const sum = await coffeeDB.getDaySum(req);
     return sum;
+  },
+
+  getCalendar: async (req, res) => {
+    const sum = await coffeeDB.getCalendar(req);
+    return sum;
   }
 };
