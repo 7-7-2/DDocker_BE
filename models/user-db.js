@@ -7,6 +7,7 @@ const setUserOauth = async req => {
   const getConn = await conn.getConnection();
   await getConn.query(sql, req).catch(err => console.log(err));
   getConn.release();
+  return result[0] ? result[0] : null;
 };
 
 const setUserInit = async req => {
@@ -16,6 +17,7 @@ const setUserInit = async req => {
   const getConn = await conn.getConnection();
   await getConn.query(sql, req).catch(err => console.log(err));
   getConn.release();
+  return result[0] ? result[0] : null;
 };
 
 const getUserAuthInfo = async req => {
@@ -45,11 +47,12 @@ const patchUserInfo = async req => {
     const update = `${key} = '${value}'`;
     patchInfo.push(update);
   }
-  const sql = `UPDATE user SET ${patchInfo} WHERE  public_id = ${req[1]}`;
+  const sql = `UPDATE user SET ${patchInfo} WHERE  public_id = '${req[1]}'`;
   const conn = await db();
   const getConn = await conn.getConnection();
-  await getConn.query(sql).catch(err => console.log(err));
+  const result = await getConn.query(sql).catch(err => console.log(err));
   getConn.release();
+  return result[0] ? result[0] : null;
 };
 
 const checkUserNickname = async req => {
@@ -58,16 +61,17 @@ const checkUserNickname = async req => {
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql).catch(err => console.log(err));
   getConn.release();
-  return result[0][0]['COUNT(*)'] ? true : false;
+  return result[0][0]['COUNT(*)'] ? 1 : 0;
 };
 
 const getUserPosts = async req => {
-  const sql = `SELECT photo, public_id FROM post WHERE user_id = '${req}'`;
+  const pages = 5 * req[1];
+  const sql = `SELECT photo, public_id FROM post WHERE user_id = '${req[0]}' ORDER BY created_at DESC LIMIT 12 OFFSET ${pages};`;
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql).catch(err => console.log(err));
   getConn.release();
-  return result;
+  return result[0].length !== 0 ? result[0] : null;
 };
 
 const getUserFollowingCount = async req => {
@@ -77,7 +81,7 @@ const getUserFollowingCount = async req => {
   const result = await getConn.query(sql).catch(err => console.log(err));
   const count = result[0][0]['COUNT(*)'];
   getConn.release();
-  return count;
+  return count && count;
 };
 
 const getUserFollowedCount = async req => {
@@ -87,7 +91,7 @@ const getUserFollowedCount = async req => {
   const result = await getConn.query(sql).catch(err => console.log(err));
   const count = result[0][0]['COUNT(*)'];
   getConn.release();
-  return count;
+  return count && count;
 };
 
 module.exports = {
