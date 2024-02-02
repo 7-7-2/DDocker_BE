@@ -99,3 +99,11 @@ exports.getReply = async postReq => {
   const data = result[0];
   return data && data;
 };
+
+exports.getFollowingPosts = async postReq => {
+  await postReq;
+  const params = [postReq];
+  const result = await connectAndQuery(PostQueries.getFollowingPosts, params);
+  const data = result[0];
+  return data && data;
+};
