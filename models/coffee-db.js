@@ -65,19 +65,12 @@ exports.getCalendar = async ({ getReq }) => {
   const getConn = await conn.getConnection();
   const params = [getReq];
   const sql = `
-          SELECT sum(caffeine) as CaffeineSum
-          FROM post
-          WHERE user_id = ? AND DATE(created_at) = CURRENT_DATE
-      `;
+        SELECT DAY(created_at) as day, sum(caffeine) as CaffeineSum
+        FROM post
+        WHERE user_id = ? AND YEAR(created_at) = YEAR(CURRENT_DATE) AND MONTH(created_at) = MONTH   (CURRENT_DATE)
+        GROUP BY DAY(created_at)
+    `;
   const [row] = await getConn.query(sql, params);
-  if (row && row[0]) {
-    const caffeineSum = row[0].CaffeineSum;
-    if (caffeineSum >= 300) {
-      row[0].color = 'red';
-    } else {
-      row[0].color = 'blue';
-    }
-  }
   getConn.release();
   return row;
 };
