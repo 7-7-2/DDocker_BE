@@ -83,8 +83,7 @@ LEFT JOIN (
     GROUP BY comment.post_id
 ) rep ON rep.post_id = com.post_id
 GROUP BY p.public_id, p.post_title, p.brand, p.menu, p.shot, p.caffeine, p.photo, p.created_at, u.profileUrl, u.nickname, u.sum;
-
-  `,
+`,
   buildPatchQuery: query.buildPatchQuery
 };
 
