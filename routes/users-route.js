@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const AuthMiddleware = require('../middlewares/authMiddleware');
+const errorHandler = require('../middlewares/errorHandler');
 const userController = require('../controllers/user-controller');
 
 router.get(
   '/users/signIn',
-  userController.signIn
+  errorHandler(userController.signIn)
   // #swagger.tags = ['USERS']
   // #swagger.summary = '소셜 로그인'
   // #swagger.responses[200] = { description: 'OK' }
@@ -14,7 +15,7 @@ router.get(
 );
 router.get(
   '/users/google/redirect',
-  userController.googleRedirect
+  errorHandler(userController.googleRedirect)
   // #swagger.tags = ['USERS']
   // #swagger.summary = '구글 로그인 인가/유저 정보 조회'
   // #swagger.responses[200] = { description: 'OK' }
@@ -23,7 +24,7 @@ router.get(
 );
 router.get(
   '/users/kakao/redirect',
-  userController.kakaoRedirect
+  errorHandler(userController.kakaoRedirect)
   // #swagger.tags = ['USERS']
   // #swagger.summary = '카카오 로그인 인가/유저 정보 조회'
   // #swagger.responses[200] = { description: 'OK' }
@@ -33,7 +34,7 @@ router.get(
 
 router.get(
   '/users/check',
-  userController.checkUserNickname
+  errorHandler(userController.checkUserNickname)
   // #swagger.tags = ['USERS']
   // #swagger.summary = '닉네임 중복 검사'
   // #swagger.responses[200] = { description: 'OK' }
@@ -44,7 +45,7 @@ router.get(
 router.post(
   '/users',
   AuthMiddleware.verifyToken,
-  userController.setInitForm
+  errorHandler(userController.setInitForm)
   // #swagger.tags = ['USERS']
   // #swagger.summary = '회원가입 유저 등록'
   // #swagger.responses[200] = { description: 'OK' }
@@ -55,7 +56,7 @@ router.post(
 router.patch(
   '/users/userInfo',
   AuthMiddleware.verifyToken,
-  userController.editProfile
+  errorHandler(userController.editProfile)
   // #swagger.tags = ['USERS']
   // #swagger.summary = 'EDIT 페이지 프로필 정보 수정'
   // #swagger.responses[200] = { description: 'OK' }
@@ -66,7 +67,7 @@ router.patch(
 router.get(
   '/users/:userId/userInfo',
   AuthMiddleware.verifyToken,
-  userController.getUserInfo
+  errorHandler(userController.getUserInfo)
   // #swagger.tags = ['USERS']
   // #swagger.summary = '프로필 페이지 상단 정보 (유저이름, 프로필사진, 카페인 정보)'
   // #swagger.responses[200] = { description: 'OK' }
@@ -76,7 +77,7 @@ router.get(
 
 router.get(
   '/users/:userId/follow',
-  userController.getUserFollowsCount
+  errorHandler(userController.getUserFollowsCount)
   // #swagger.tags = ['USERS']
   // #swagger.summary = '프로필 페이지용 팔로우/팔로잉 카운트'
   // #swagger.responses[200] = { description: 'OK' }
@@ -85,9 +86,9 @@ router.get(
 );
 
 router.get(
-  '/users/:userId/posts',
+  '/users/:userId/posts/:pages',
   AuthMiddleware.verifyToken,
-  userController.getUserPosts
+  errorHandler(userController.getUserPosts)
   // #swagger.tags = ['USERS']
   // #swagger.summary = '유저 작성 게시물 그리드'
   // #swagger.responses[200] = { description: 'OK' }
