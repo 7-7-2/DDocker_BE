@@ -43,5 +43,9 @@ module.exports = {
   getReply: async (req, res) => {
     const result = await postsDB.getReply(req);
     return result ? result : Promise.reject('Failed to get reply');
+  },
+  getFollowingPosts: async (req, res) => {
+    const result = await postsDB.getFollowingPosts(req);
+    return result ? result : Promise.reject('Failed to get following posts');
   }
 };
