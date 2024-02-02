@@ -63,7 +63,9 @@ const getGoogleAuth = async code => {
 
   const res = await userInfoReq.json();
   const userInfo = [res.picture, res.email, 'google'];
-  return userInfo;
+  return userInfo
+    ? userInfo
+    : await Promise.reject('Failed to get user profile');
 };
 
 // KAKAO OAUTH
@@ -118,10 +120,12 @@ const getKakaoAuth = async code => {
     res.kakao_account.email,
     'kakao'
   ];
-  return userInfo;
+  return userInfo
+    ? userInfo
+    : await Promise.reject('Failed to get user profile');
 };
 
-const setUserOauth = async req => {
+const setUserOauth = async (req, res) => {
   const email = req[1];
   const social = req[2];
   const id = nanoid();
@@ -129,50 +133,66 @@ const setUserOauth = async req => {
 
   // 가입된 정보가 있을때
   const userId = await userDB.getUserAuthInfo([email, social]);
+  const result = await getAccessToken(userId);
 
   // 가입된 정보가 없을때
   if (!userId) {
     await userDB.setUserOauth(req);
     const userId = await userDB.getUserAuthInfo([email, social]);
-    return await getAccessToken(userId);
+    const result = await getAccessToken(userId);
+    return result
+      ? await res.status(201).json({ success: 'Created', accessToken: result })
+      : await Promise.reject('Failed to social login');
   }
 
-  return await getAccessToken(userId);
+  return result
+    ? await res.status(200).json({ success: 'OK', accessToken: result })
+    : await Promise.reject('Failed to social login');
 };
 
 // DDOCKER SIGN UP
 const setUserInit = async req => {
-  await userDB.setUserInit(req);
+  const result = await userDB.setUserInit(req);
+  return result ? result : await Promise.reject('Failed to DDocker Sign up');
 };
 
 // USER INFO
 const getUserInfo = async userId => {
   const result = await userDB.getUserInfo(userId);
-  return result;
+  return result ? result : await Promise.reject('Failed to get User info');
 };
 
 // DDOCKER ACCESS_TOKEN
 const getAccessToken = async userId => {
   const user = { userId };
   const accessToken = jwt.sign(user, ACCESS_TOKEN_SECRET);
-  return `Bearer ${accessToken}`;
+  return accessToken
+    ? `Bearer ${accessToken}`
+    : await Promise.reject('Failed to get DDocker accessToken');
 };
 
 // EDIT USER PROFILE
 const patchUserProfile = async req => {
-  await userDB.patchUserInfo(req);
+  const result = await userDB.patchUserInfo(req);
+  return result ? result : await Promise.reject('Failed to Edit User Profile');
 };
 
 // CHECK USER NICKNAME
 const checkUserNickname = async req => {
   const result = await userDB.checkUserNickname(req);
-  return result;
+  return result
+    ? false
+    : result === 0
+      ? true
+      : await Promise.reject('Failed to Check Nickname');
 };
 
 //  GET USER POSTS
-const getUserPosts = async userId => {
-  const result = await userDB.getUserPosts(userId);
-  return result;
+const getUserPosts = async req => {
+  const result = await userDB.getUserPosts(req);
+  return result
+    ? await result
+    : await Promise.reject('Failed to get User Posts');
 };
 
 //  GET USER FOLLOWES COUNT
@@ -180,7 +200,9 @@ const getUserFollowsCount = async userId => {
   const following = await userDB.getUserFollowingCount(userId);
   const followed = await userDB.getUserFollowedCount(userId);
   const result = { following: following, followed: followed };
-  return result;
+  return result
+    ? result
+    : await Promise.reject('Failed to get User Follows Count');
 };
 
 module.exports = {
