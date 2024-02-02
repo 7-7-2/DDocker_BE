@@ -66,7 +66,7 @@ const checkUserNickname = async req => {
 
 const getUserPosts = async req => {
   const pages = 5 * req[1];
-  const sql = `SELECT photo, public_id FROM post WHERE user_id = '${req[0]}' ORDER BY created_at DESC LIMIT 12 OFFSET ${pages};`;
+  const sql = `SELECT photo, public_id FROM post WHERE user_id = '${req[0]}' ORDER BY created_at DESC LIMIT 24 OFFSET ${pages};`;
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql).catch(err => console.log(err));
