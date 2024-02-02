@@ -34,7 +34,7 @@ module.exports = {
         if (day <= lastDayOfMonth) {
           result.Calendar[0].days[day] = {
             caffeineSum: caffeineSum,
-            color: caffeineSum >= 400 ? 'red' : 'blue'
+            recommend: caffeineSum >= 400 ? 'true' : 'false'
           };
         }
       });
