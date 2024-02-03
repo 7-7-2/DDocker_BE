@@ -27,7 +27,9 @@ module.exports = {
         [date]: await coffeeDB.getDaySum({ getReq, date })
       }))
     );
-    return results.reduce((acc, result) => ({ ...acc, ...result }), {});
+    return results
+      ? results.reduce((acc, result) => ({ ...acc, ...result }), {})
+      : Promise.reject('Failed to get daySum');
   },
 
   getCalendar: async (req, res) => {
