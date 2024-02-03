@@ -2,6 +2,7 @@ const searchDB = require('../models/search-db');
 
 module.exports = {
   getUserInfo: async (req, res) => {
-    return await searchDB.getSearchList(req);
+    const result = await searchDB.getSearchList(req);
+    return result ? result : Promise.reject('Failed to get userInfo');
   }
 };

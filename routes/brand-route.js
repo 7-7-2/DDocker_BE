@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const errorHandler = require('../middlewares/errorHandler');
 const brandController = require('../controllers/brand-controller');
 
-router.get('/brand', brandController.getBrand);
+router.get('/brand', errorHandler(brandController.getBrand));
 
 // router.get('/brand', async (req, res) => {
 //   try {

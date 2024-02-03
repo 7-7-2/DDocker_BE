@@ -3,11 +3,11 @@ const coffeeDB = require('../models/coffee-db');
 module.exports = {
   getCoffeeInfoSum: async (req, res) => {
     const sum = await coffeeDB.getCoffeeInfoSum(req);
-    return sum;
+    return sum ? sum : Promise.reject('Failed to get coffeeInfoSum');
   },
   getDaySum: async (req, res) => {
     const sum = await coffeeDB.getDaySum(req);
-    return sum;
+    return sum ? sum : Promise.reject('Failed to get daySum');
   },
 
   getCalendar: async (req, res) => {
@@ -39,6 +39,6 @@ module.exports = {
         }
       });
     }
-    return result;
+    return result ? result : Promise.reject('Failed to get calendar');
   }
 };
