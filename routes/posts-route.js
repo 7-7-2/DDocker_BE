@@ -5,10 +5,12 @@ const errorHandler = require('../middlewares/errorHandler');
 const AuthMiddleware = require('../middlewares/authMiddleware');
 
 router.get(
-  '/posts'
+  '/posts',
+  AuthMiddleware.verifyToken,
+  errorHandler(postController.getFollowingPosts)
   //        !!!!! GET FOLLOWERS POSTS !!!!
   // #swagger.tags = ['POSTS']
-  // #swagger.summary = '내가 팔로잉한 사람들의 게시물들'
+  // #swagger.summary = '로그인한 유저가 팔로잉 중인 유저의 게시물들 조회'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }

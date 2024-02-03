@@ -89,3 +89,12 @@ exports.getReply = async (req, res) => {
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
   );
 };
+// 11. 로그인한 유저가 팔로잉 중인 유저의 게시물들 조회
+exports.getFollowingPosts = async (req, res) => {
+  const postReq = req.userId;
+  const postRes = await PostService.getReply(postReq);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};
