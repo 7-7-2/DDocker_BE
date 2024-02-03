@@ -24,12 +24,15 @@ exports.getCoffeeInfoSum = async ({ getReq }) => {
 exports.getDaySum = async ({ getReq }) => {
   const params = [getReq];
   const branchFuc = async date => {
-    const sql = `
+    const result = await executeQuery(
+      `
         SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
         FROM post
         WHERE user_id = ? AND ${date}(created_at) = ${date}(CURDATE())
-      `;
-    return await executeQuery(sql, params);
+      `,
+      params
+    );
+    return result;
   };
   const year = await branchFuc('YEAR');
   const month = await branchFuc('MONTH');
@@ -40,11 +43,14 @@ exports.getDaySum = async ({ getReq }) => {
 
 exports.getCalendar = async ({ getReq }) => {
   const params = [getReq];
-  const sql = `
+  const result = await executeQuery(
+    `
         SELECT DAY(created_at) as day, sum(caffeine) as CaffeineSum
         FROM post
         WHERE user_id = ? AND YEAR(created_at) = YEAR(CURRENT_DATE) AND MONTH(created_at) = MONTH   (CURRENT_DATE)
         GROUP BY DAY(created_at)
-    `;
-  return await executeQuery(sql, params);
+    `,
+    params
+  );
+  return result;
 };
