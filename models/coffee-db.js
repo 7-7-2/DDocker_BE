@@ -21,24 +21,17 @@ exports.getCoffeeInfoSum = async ({ getReq }) => {
   return result;
 };
 
-exports.getDaySum = async ({ getReq }) => {
+exports.getDaySum = async ({ getReq, date }) => {
   const params = [getReq];
-  const branchFuc = async date => {
-    const result = await executeQuery(
-      `
+  const result = await executeQuery(
+    `
         SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
         FROM post
         WHERE user_id = ? AND ${date}(created_at) = ${date}(CURDATE())
       `,
-      params
-    );
-    return result;
-  };
-  const year = await branchFuc('YEAR');
-  const month = await branchFuc('MONTH');
-  const week = await branchFuc('WEEK');
-
-  return { year, month, week };
+    params
+  );
+  return result;
 };
 
 exports.getCalendar = async ({ getReq }) => {

@@ -20,9 +20,14 @@ module.exports = {
         : Promise.reject('Failed to get coffeeInfoSum');
     }
   },
-  getDaySum: async (req, res) => {
-    const sum = await coffeeDB.getDaySum(req);
-    return sum ? sum : Promise.reject('Failed to get daySum');
+  getDaySum: async ({ getReq }) => {
+    const dates = ['YEAR', 'MONTH', 'WEEK'];
+    const results = await Promise.all(
+      dates.map(async date => ({
+        [date]: await coffeeDB.getDaySum({ getReq, date })
+      }))
+    );
+    return results.reduce((acc, result) => ({ ...acc, ...result }), {});
   },
 
   getCalendar: async (req, res) => {
