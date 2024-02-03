@@ -10,19 +10,15 @@ const executeQuery = async (sql, params) => {
 
 exports.getCoffeeInfoSum = async ({ getReq }) => {
   const params = [getReq];
-  const sql = `
-    SELECT brand, caffeine
+  const result = await executeQuery(
+    `
+    SELECT brand, caffeine, SUM(caffeine) AS caffeineSum, COUNT(*) AS allCount
     FROM post
     WHERE user_id = ? AND DATE(created_at) = CURRENT_DATE
-  `;
-  const [mapItem] = await executeQuery(sql, params);
-  const sql2 = `
-    SELECT SUM(caffeine), count(*)
-    FROM post
-    WHERE user_id = ? AND DATE(created_at) = CURRENT_DATE
-  `;
-  const [sumRow] = await executeQuery(sql2, params);
-  return { sumRow, mapItem };
+  `,
+    params
+  );
+  return result;
 };
 
 exports.getDaySum = async ({ getReq }) => {

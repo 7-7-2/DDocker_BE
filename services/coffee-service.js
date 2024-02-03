@@ -2,8 +2,23 @@ const coffeeDB = require('../models/coffee-db');
 
 module.exports = {
   getCoffeeInfoSum: async (req, res) => {
-    const sum = await coffeeDB.getCoffeeInfoSum(req);
-    return sum ? sum : Promise.reject('Failed to get coffeeInfoSum');
+    const result = await coffeeDB.getCoffeeInfoSum(req);
+
+    if (result && result.length > 0) {
+      const coffeeInfo = {
+        item: {
+          brand: result[0].brand,
+          caffeine: result[0].caffeine
+        },
+        sumItem: {
+          totalCaffeine: result[0].caffeineSum,
+          itemCount: result[0].allCount
+        }
+      };
+      return coffeeInfo
+        ? { coffeeInfo }
+        : Promise.reject('Failed to get coffeeInfoSum');
+    }
   },
   getDaySum: async (req, res) => {
     const sum = await coffeeDB.getDaySum(req);
