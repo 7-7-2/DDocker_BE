@@ -29,15 +29,15 @@ exports.getDaySum = async ({ getReq }) => {
   const params = [getReq];
   const branchFuc = async date => {
     const sql = `
-          SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
-          FROM post
-          WHERE user_id = ? ${date}
+        SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
+        FROM post
+        WHERE user_id = ? AND ${date}(created_at) = ${date}(CURDATE())
       `;
     return await executeQuery(sql, params);
   };
-  const year = await branchFuc(`AND YEAR(created_at) = YEAR(CURDATE())`);
-  const month = await branchFuc(`AND MONTH(created_at) = MONTH(CURDATE())`);
-  const week = await branchFuc(`AND WEEK(created_at) = WEEK(CURDATE())`);
+  const year = await branchFuc('YEAR');
+  const month = await branchFuc('MONTH');
+  const week = await branchFuc('WEEK');
 
   return { year, month, week };
 };
