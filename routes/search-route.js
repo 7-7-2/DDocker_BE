@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const errorHandler = require('../middlewares/errorHandler');
 const SearchController = require('../controllers/search-controller');
 
 router.get(
   '/search/:nickname',
-  SearchController.getUserInfo
+  errorHandler(SearchController.getUserInfo)
   // #swagger.tags = ['SEARCH']
   // #swagger.summary = '유저 검색'
   // #swagger.responses[200] = { description: 'OK' }
