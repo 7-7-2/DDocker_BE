@@ -87,13 +87,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "time",
-            "in": "path",
-            "description": "day,week,month,year",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
