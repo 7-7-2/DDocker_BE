@@ -100,30 +100,42 @@ const queries = {
         COUNT(DISTINCT co.id) AS total_comments
     FROM comment co
     GROUP BY co.post_id
-),
-TotalReplies AS (
+    ),
+    TotalReplies AS (
+        SELECT
+            comment.post_id,
+            COUNT(*) AS total_replies
+        FROM reply
+        INNER JOIN comment ON reply.comment_id = comment.id
+        GROUP BY comment.post_id
+    ),
+    LikeCounts AS (
+        SELECT post_id, COUNT(id) AS likeCounts
+        FROM likes
+        GROUP BY post_id
+    )
     SELECT
-        comment.post_id,
-        COUNT(*) AS total_replies
-    FROM reply
-    INNER JOIN comment ON reply.comment_id = comment.id
-    GROUP BY comment.post_id
-),
-LikeCounts AS (
-    SELECT post_id, COUNT(id) AS likeCounts
-    FROM likes
-    GROUP BY post_id
-)
-SELECT
-	    COALESCE(SUM(COALESCE(tc.total_comments, 0) + COALESCE(tr.total_replies, 0)), 0) AS totalComments,
-	    COALESCE(SUM(lk.likeCounts), 0) AS totalLikes
-FROM post p 
-LEFT JOIN TotalComments tc ON tc.post_id = p.public_id
-LEFT JOIN TotalReplies tr ON tr.post_id = tc.post_id
-LEFT JOIN LikeCounts lk ON lk.post_id = p.public_id
-WHERE p.public_id = ?
-GROUP BY p.public_id
-`,
+            COALESCE(SUM(COALESCE(tc.total_comments, 0) + COALESCE(tr.total_replies, 0)), 0) AS totalComments,
+            COALESCE(SUM(lk.likeCounts), 0) AS totalLikes
+    FROM post p 
+    LEFT JOIN TotalComments tc ON tc.post_id = p.public_id
+    LEFT JOIN TotalReplies tr ON tr.post_id = tc.post_id
+    LEFT JOIN LikeCounts lk ON lk.post_id = p.public_id
+    WHERE p.public_id = ?
+    GROUP BY p.public_id
+    `,
+  getRecentRanking: `SELECT
+    brand, COUNT(brand) AS co
+    FROM post p
+    WHERE p.created_at BETWEEN DATE_ADD(NOW(), INTERVAL -1 WEEK ) AND NOW()
+    GROUP BY brand
+    ORDER BY co DESC 
+    LIMIT 5;`,
+  getAccumulatedRanking: `
+  SELECT post.brand,COUNT(brand) AS co
+  FROM post 
+  GROUP BY brand 
+  ORDER BY COUNT(brand) DESC;`,
   buildPatchQuery: query.buildPatchQuery
 };
 

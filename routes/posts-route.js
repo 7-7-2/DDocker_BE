@@ -8,7 +8,6 @@ router.get(
   '/posts',
   AuthMiddleware.verifyToken,
   errorHandler(postController.getFollowingPosts)
-  //        !!!!! GET FOLLOWERS POSTS !!!!
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '로그인한 유저가 팔로잉 중인 유저의 게시물들 조회'
   // #swagger.responses[200] = { description: 'OK' }
@@ -128,14 +127,16 @@ router.get(
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
-router.get('/posts/popular', (req, res) => {
-  res.json('인기 브랜드 순위 조회');
+router.get(
+  '/popular',
+  AuthMiddleware.verifyToken,
+  errorHandler(postController.getRanking)
   // #swagger.tags = ['POSTS']
   // #swagger.summary = '인기 브랜드 순위 조회'
   // #swagger.responses[200] = { description: 'OK' }
   // #swagger.responses[400] = { description: 'Bad Request' }
   // #swagger.responses[500] = { description: 'Internal Server Error' }
-});
+);
 
 module.exports = router;
 

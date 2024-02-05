@@ -107,3 +107,11 @@ exports.getSocialCounts = async (req, res) => {
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
   );
 };
+exports.getRanking = async (req, res) => {
+  const postReq = req.userId;
+  const postRes = (await postReq) && (await PostService.getRanking(req));
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};

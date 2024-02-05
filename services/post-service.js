@@ -56,5 +56,9 @@ module.exports = {
       totalLikes: Number(frozen.totalLikes)
     };
     return result ? converted : Promise.reject('Failed to get social counts');
+  },
+  getRanking: async (req, res) => {
+    const result = await postsDB.getRanking(req);
+    return result ? result : Promise.reject('Failed to get ranking');
   }
 };
