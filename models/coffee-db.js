@@ -25,10 +25,10 @@ exports.getDaySum = async ({ getReq, date }) => {
   const params = [getReq];
   const result = await executeQuery(
     `
-        SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
-        FROM post
-        WHERE user_id = ? AND ${date}(created_at) = ${date}(CURDATE())
-      `,
+            SELECT COUNT(*) AS CountSum, SUM(caffeine) AS CaffeineSum
+            FROM post
+            WHERE user_id = ? AND ${date.query}
+        `,
     params
   );
   return result;

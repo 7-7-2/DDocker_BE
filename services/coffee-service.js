@@ -21,10 +21,15 @@ module.exports = {
     }
   },
   getDaySum: async ({ getReq }) => {
-    const dates = ['YEAR', 'MONTH', 'WEEK'];
+    const dateQueries = [
+      { type: 'YEAR', query: 'YEAR(created_at) = YEAR(CURDATE())' },
+      { type: 'MONTH', query: 'MONTH(created_at) = MONTH(CURDATE())' },
+      { type: 'WEEK', query: 'WEEK(created_at, 1) = WEEK(CURDATE(), 1)' }
+    ];
+
     const results = await Promise.all(
-      dates.map(async date => ({
-        [date]: await coffeeDB.getDaySum({ getReq, date })
+      dateQueries.map(async date => ({
+        [date.type]: await coffeeDB.getDaySum({ getReq, date })
       }))
     );
     return results
