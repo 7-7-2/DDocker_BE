@@ -115,3 +115,18 @@ exports.getSocialCounts = async postReq => {
   const data = result[0];
   return data && data;
 };
+
+exports.getRanking = async postReq => {
+  const rec = await connectAndQuery(PostQueries.getRecentRanking);
+  const weekly = rec && rec[0].map(i => i.brand);
+  const lackOf = rec && 5 - rec[0].length;
+  const range = lackOf && [...Array.from({ length: lackOf }, (_, i) => i)];
+  const acc =
+    rec &&
+    rec[0].length < 5 &&
+    (await connectAndQuery(PostQueries.getAccumulatedRanking));
+  const accPopular = acc && acc[0].filter(i => !weekly.includes(i.brand));
+  const result = rec &&
+    accPopular && [...rec[0], ...range.map(i => accPopular[i])];
+  return rec[0].length >= 5 ? rec[0] : result;
+};
