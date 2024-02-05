@@ -98,3 +98,12 @@ exports.getFollowingPosts = async (req, res) => {
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
   );
 };
+//12. 게시글 상세 내부 좋아요 및 댓글 개수 확인
+exports.getSocialCounts = async (req, res) => {
+  const postReq = req.params.postId;
+  const postRes = await PostService.getSocialCounts(postReq);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};
