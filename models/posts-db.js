@@ -107,3 +107,11 @@ exports.getFollowingPosts = async postReq => {
   const data = result[0];
   return data && data;
 };
+
+exports.getSocialCounts = async postReq => {
+  await postReq;
+  const params = [postReq];
+  const result = await connectAndQuery(PostQueries.getSocialCounts, params);
+  const data = result[0];
+  return data && data;
+};

@@ -118,6 +118,16 @@ router.delete(
   // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
+router.get(
+  '/posts/:postId/counts',
+  errorHandler(postController.getSocialCounts)
+  // #swagger.tags = ['POSTS']
+  // #swagger.summary = '게시글 내부 댓글+답글 수 및 좋아요 수 조회'
+  // #swagger.responses[200] = { description: 'OK' }
+  // #swagger.responses[400] = { description: 'Bad Request' }
+  // #swagger.responses[500] = { description: 'Internal Server Error' }
+);
+
 router.get('/posts/popular', (req, res) => {
   res.json('인기 브랜드 순위 조회');
   // #swagger.tags = ['POSTS']

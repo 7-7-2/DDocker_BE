@@ -47,5 +47,14 @@ module.exports = {
   getFollowingPosts: async (req, res) => {
     const result = await postsDB.getFollowingPosts(req);
     return result ? result : Promise.reject('Failed to get following posts');
+  },
+  getSocialCounts: async (req, res) => {
+    const result = await postsDB.getSocialCounts(req);
+    const frozen = Object.freeze(result[0]);
+    const converted = {
+      totalComments: Number(frozen.totalComments),
+      totalLikes: Number(frozen.totalLikes)
+    };
+    return result ? converted : Promise.reject('Failed to get social counts');
   }
 };
