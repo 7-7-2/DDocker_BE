@@ -7,7 +7,7 @@ const queries = {
   FROM post a 
   LEFT JOIN user b 
   ON a.user_id = b.public_id 
-  WHERE a.user_id=?`,
+  WHERE a.public_id=?`,
   registerPost: query.buildInsert('post', [
     'user_id',
     'brand',
