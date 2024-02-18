@@ -23,7 +23,8 @@ const googleSignIn = async res => {
   url += `&redirect_uri=${GOOGLE_REDIRECT_URI}`;
   url += '&response_type=code';
   url += '&scope=email profile';
-  res.redirect(url);
+  // res.redirect(url);
+  return url;
 };
 
 const getGoogleAuth = async code => {
@@ -74,7 +75,7 @@ const kakaoSignIn = async res => {
   url += `?client_id=${KAKAO_CLIENT_ID}`;
   url += `&redirect_uri=${KAKAO_REDIRECT_URI}`;
   url += '&response_type=code';
-  res.redirect(url);
+  return url;
 };
 
 const getKakaoAuth = async code => {
@@ -140,6 +141,7 @@ const setUserOauth = async (req, res) => {
     await userDB.setUserOauth(req);
     const userId = await userDB.getUserAuthInfo([email, social]);
     const result = await getAccessToken(userId);
+
     return result
       ? await res.status(201).json({ success: 'Created', accessToken: result })
       : await Promise.reject('Failed to social login');
@@ -159,7 +161,11 @@ const setUserInit = async req => {
 // USER INFO
 const getUserInfo = async userId => {
   const result = await userDB.getUserInfo(userId);
-  return result ? result : await Promise.reject('Failed to get User info');
+  return result
+    ? result
+    : result === null
+      ? true
+      : await Promise.reject('Failed to get UserInfo');
 };
 
 // DDOCKER ACCESS_TOKEN
@@ -181,7 +187,7 @@ const patchUserProfile = async req => {
 const checkUserNickname = async req => {
   const result = await userDB.checkUserNickname(req);
   return result
-    ? false
+    ? 1
     : result === 0
       ? true
       : await Promise.reject('Failed to Check Nickname');
