@@ -38,7 +38,7 @@ const getUserInfo = async req => {
   const getConn = await conn.getConnection();
   const resault = await getConn.query(sql, req).catch(err => console.log(err));
   getConn.release();
-  return resault[0][0]['nickname'] ? resault : null;
+  return resault[0][0]['nickname'] ? resault[0][0] : null;
 };
 
 const patchUserInfo = async req => {
@@ -65,7 +65,7 @@ const checkUserNickname = async req => {
 };
 
 const getUserPosts = async req => {
-  const pages = 5 * req[1];
+  const pages = 24 * req[1];
   const sql = `SELECT photo, public_id FROM post WHERE user_id = '${req[0]}' ORDER BY created_at DESC LIMIT 24 OFFSET ${pages};`;
   const conn = await db();
   const getConn = await conn.getConnection();
