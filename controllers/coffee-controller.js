@@ -2,20 +2,19 @@ const coffeeService = require('../services/coffee-service');
 
 module.exports = {
   getCoffeeInfo: async (req, res) => {
-    const getReq = req.params.userId;
     const setRes = await coffeeService
-      .getCoffeeInfoSum({ getReq })
+      .getTodayCoffeeInfo(req.userId)
       .catch(err => {
         console.log(err);
         res.status(500).json({
           message: err
         });
       });
-    return res.status(200).json({ setRes });
+    return res.status(200).json(setRes);
   },
 
   getDaySum: async (req, res) => {
-    const getReq = req.params.userId;
+    const getReq = req.userId;
     const setRes = await coffeeService.getDaySum({ getReq }).catch(err => {
       res.status(500).json({
         message: err
@@ -25,7 +24,7 @@ module.exports = {
   },
 
   getCalendar: async (req, res) => {
-    const getReq = req.params.userId;
+    const getReq = req.userId;
     const setRes = await coffeeService.getCalendar({ getReq }).catch(err => {
       res.status(500).json({
         message: err
