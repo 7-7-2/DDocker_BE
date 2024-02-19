@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const errorHandler = require('../middlewares/errorHandler');
+const AuthMiddleware = require('../middlewares/authMiddleware');
 const coffeeController = require('../controllers/coffee-controller');
 
 router.get(
-  '/coffee/:userId',
+  '/coffee',
+  AuthMiddleware.verifyToken,
   errorHandler(coffeeController.getCoffeeInfo)
 
   // #swagger.tags = ['COFFEE']
@@ -15,7 +17,8 @@ router.get(
 );
 
 router.get(
-  '/coffee/caffeine/:userId',
+  '/coffee/caffeine',
+  AuthMiddleware.verifyToken,
   errorHandler(coffeeController.getDaySum)
   // #swagger.tags = ['COFFEE']
   // #swagger.summary = '기간별 단일 유저 카페인 및 잔 수 조회'
@@ -26,7 +29,8 @@ router.get(
 );
 
 router.get(
-  '/coffee/calendar/:userId',
+  '/coffee/calendar',
+  AuthMiddleware.verifyToken,
   errorHandler(coffeeController.getCalendar)
 );
 
