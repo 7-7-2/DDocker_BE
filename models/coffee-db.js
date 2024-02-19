@@ -8,17 +8,17 @@ const executeQuery = async (sql, params) => {
   return row;
 };
 
-exports.getCoffeeInfoSum = async ({ getReq }) => {
-  const params = [getReq];
-  const result = await executeQuery(
-    `
-    SELECT brand, caffeine, SUM(caffeine) AS caffeineSum, COUNT(*) AS allCount
+exports.getTodayCoffeeInfo = async getReq => {
+  const res = await executeQuery(
+    `SELECT p.caffeineSum, p.allCount, JSON_ARRAYAGG(JSON_OBJECT('brand', s.brand, 'caffeine', s.caffeine)) AS item FROM (SELECT SUM(caffeine) AS caffeineSum, COUNT(*) AS allCount
     FROM post
-    WHERE user_id = ? AND DATE(created_at) = CURRENT_DATE
-  `,
-    params
+    WHERE user_id = '${getReq}' AND DATE(created_at) = CURRENT_DATE) AS p 
+    INNER JOIN (SELECT brand, caffeine
+    FROM post
+    WHERE user_id = '${getReq}' AND DATE(created_at) = CURRENT_DATE) AS s
+  `
   );
-  return result;
+  return res;
 };
 
 exports.getDaySum = async ({ getReq, date }) => {
