@@ -1,10 +1,12 @@
 const postsDB = require('../models/posts-db');
 const validatePostForm = require('../middlewares/validatePostForm');
+const switchBrand = require('../middlewares/switchBrand');
 
 module.exports = {
   getPostDetail: async (req, res) => {
     const result = await postsDB.getPostDetail(req);
-    return result ? result : Promise.reject('Failed to get post detail');
+    const converted = { ...result, brand: switchBrand(result.brand) };
+    return result ? converted : Promise.reject('Failed to get post detail');
   },
   registerPost: async (req, res) => {
     const result = (await validatePostForm(req))
