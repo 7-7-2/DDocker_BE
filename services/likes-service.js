@@ -8,5 +8,9 @@ module.exports = {
   undoLikePost: async (req, res) => {
     const result = await likesDB.undoLikePost(req);
     return result ? result : Promise.reject('Failed to undo like post');
+  },
+  getMyLikeOnPost: async (req, res) => {
+    const result = await likesDB.getMyLikeOnPost(req);
+    return result ?? Promise.reject('Failed to check if the user liked post');
   }
 };
