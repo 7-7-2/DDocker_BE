@@ -10,11 +10,18 @@ exports.likePost = async (req, res) => {
 };
 // 2. 게시글 좋아요 취소
 exports.undoLikePost = async (req, res) => {
-  // req.userId;
   const postReq = [req.userId, req.params.postId];
   const postRes = await LikesService.undoLikePost(postReq);
   return (
     postRes &&
     res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
   );
+};
+// 3. 인증된 사용자가 게시글의 본인 좋아요 확인(게시글 진입시)
+exports.getMyLikeOnPost = async (req, res) => {
+  const postReq = [req.userId, req.params.postId];
+  const postRes = await LikesService.getMyLikeOnPost(postReq);
+  return res
+    .status(200)
+    .json({ success: postRes !== undefined ? postRes : null });
 };

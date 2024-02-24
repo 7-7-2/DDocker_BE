@@ -92,13 +92,13 @@ exports.getReply = async (req, res) => {
 // 11. 로그인한 유저가 팔로잉 중인 유저의 게시물들 조회
 exports.getFollowingPosts = async (req, res) => {
   const postReq = req.userId;
-  const postRes = await PostService.getReply(postReq);
+  const postRes = await PostService.getFollowingPosts(postReq);
   return (
     postRes &&
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
   );
 };
-//12. 게시글 상세 내부 좋아요 및 댓글 개수 확인
+// 12. 게시글 상세 내부 좋아요 및 댓글 개수 확인
 exports.getSocialCounts = async (req, res) => {
   const postReq = req.params.postId;
   const postRes = await PostService.getSocialCounts(postReq);
@@ -107,6 +107,7 @@ exports.getSocialCounts = async (req, res) => {
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
   );
 };
+// 13. 메인 페이지 브랜드 순위 조회
 exports.getRanking = async (req, res) => {
   const postReq = req.userId;
   const postRes = (await postReq) && (await PostService.getRanking(req));

@@ -14,7 +14,14 @@ module.exports = async ({ app }) => {
   });
   app.enable('trust proxy');
 
-  app.use(require('cors')({ origin: ORIGIN, credentials: CREDENTIALS }));
+  app.use(
+    require('cors')({
+      origin: ORIGIN,
+      credentials: CREDENTIALS,
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      optionsSuccessStatus: 200
+    })
+  );
   app.use(require('morgan')('dev'));
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());

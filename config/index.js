@@ -11,7 +11,8 @@ if (process.env.NODE_ENV === undefined) {
   });
 }
 
-const CREDENTIALS = process.env.CREDENTIALS === 'true';
+const CREDENTIALS = (process.env.CREDENTIALS = true);
+const ORIGIN = (process.env.ORIGIN = 'http://localhost:3000');
 
 const {
   NODE_ENV,
@@ -23,7 +24,6 @@ const {
   DB_PASSWORD,
   DB_DATABASE,
   DB_SCHEMA,
-  ORIGIN,
   ACCESS_TOKEN_SECRET,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
