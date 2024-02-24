@@ -29,11 +29,22 @@ const queries = {
   ]),
   deleteReply: query.buildDelete('reply', ['user_id', 'id']),
   getComments: `SELECT 
-  u.profileUrl, u.nickname, c.content, c.created_at 
-  FROM user u
-  LEFT JOIN comment c
-  ON c.post_id = ?
-  WHERE c.user_id = u.public_id
+    u.profileUrl, 
+    u.nickname, 
+    c.content, 
+    c.created_at, 
+    c.id,
+    COUNT(r.comment_id) AS reply_count
+  FROM 
+    user u
+  LEFT JOIN 
+    comment c ON c.user_id = u.public_id
+  LEFT JOIN 
+    reply r ON c.id = r.comment_id
+  WHERE 
+    c.post_id = ?
+  GROUP BY 
+    c.id;
   `,
   getReply: `SELECT
   u.profileUrl, u.nickname, r.content, r.created_at 
