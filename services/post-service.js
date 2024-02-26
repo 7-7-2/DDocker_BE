@@ -48,6 +48,7 @@ module.exports = {
   },
   getFollowingPosts: async (req, res) => {
     const result = await postsDB.getFollowingPosts(req);
+    result && result.forEach(i => (i.brand = switchBrand(i.brand)));
     return result ? result : Promise.reject('Failed to get following posts');
   },
   getSocialCounts: async (req, res) => {
