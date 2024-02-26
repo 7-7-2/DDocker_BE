@@ -85,19 +85,20 @@ const queries = {
       GROUP BY post_id
   )
   SELECT
-      p.public_id,
-      p.post_title,
+      p.public_id AS postId,
+      p.post_title AS postTitle,
       p.brand,
       p.menu,
       p.shot,
       p.caffeine,
       p.photo,
-      p.created_at,
+      p.created_at AS createdAt,
       u.profileUrl,
       u.nickname,
       u.sum,
-      COALESCE(SUM(COALESCE(tc.total_comments, 0) + COALESCE(tr.total_replies, 0)), 0) AS totalComments,
-      lk.likeCounts
+      u.public_id AS userId,
+      CONVERT (COALESCE(SUM(COALESCE(tc.total_comments, 0) + COALESCE(tr.total_replies, 0)), 0), UNSIGNED) AS totalComments,
+      COALESCE (lk.likeCounts, 0) AS likeCounts
   FROM post p
   INNER JOIN UserList u ON u.public_id = p.user_id
   LEFT JOIN TotalComments tc ON tc.post_id = p.public_id
