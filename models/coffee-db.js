@@ -8,7 +8,7 @@ const executeQuery = async (sql, params) => {
   return row;
 };
 
-exports.getTodayCoffeeInfo = async getReq => {
+exports.getCoffeeInfoSum = async getReq => {
   const res = await executeQuery(
     `SELECT p.caffeineSum, p.allCount, JSON_ARRAYAGG(JSON_OBJECT('brand', s.brand, 'caffeine', s.caffeine)) AS item FROM (SELECT SUM(caffeine) AS caffeineSum, COUNT(*) AS allCount
     FROM post
