@@ -101,11 +101,17 @@ exports.getReply = async postReq => {
 };
 
 exports.getFollowingPosts = async postReq => {
-  await postReq;
-  const params = [postReq];
+  const [userId, pageNum] = await postReq;
+  const offset = pageNum && (pageNum - 1) * 5;
+  const params = [userId, offset];
   const result = await connectAndQuery(PostQueries.getFollowingPosts, params);
   const data = result[0];
-  return data && data;
+  return (
+    data && {
+      results: data,
+      next: data.length < 5 ? null : Number(pageNum) + 1
+    }
+  );
 };
 
 exports.getSocialCounts = async postReq => {

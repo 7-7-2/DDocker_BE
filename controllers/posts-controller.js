@@ -91,7 +91,7 @@ exports.getReply = async (req, res) => {
 };
 // 11. 로그인한 유저가 팔로잉 중인 유저의 게시물들 조회
 exports.getFollowingPosts = async (req, res) => {
-  const postReq = req.userId;
+  const postReq = [req.userId, req.params.pageNum];
   const postRes = await PostService.getFollowingPosts(postReq);
   return (
     postRes &&
