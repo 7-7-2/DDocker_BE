@@ -5,7 +5,7 @@ const errorHandler = require('../middlewares/errorHandler');
 const AuthMiddleware = require('../middlewares/authMiddleware');
 
 router.get(
-  '/posts/:pageNum',
+  '/posts/following/:pageNum',
   AuthMiddleware.verifyToken,
   errorHandler(postController.getFollowingPosts)
   // #swagger.tags = ['POSTS']
