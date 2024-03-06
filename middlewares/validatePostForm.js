@@ -11,7 +11,7 @@ const validatePostForm = async form => {
     await form[1];
   const nums = checkInt(shot, caffeine);
   const validStrings = trimmer([brand, menu, post_title, size, photo]);
-  const length = Object.keys(form[1]).length === 7;
+  const length = Object.keys(form[1]).length === 9;
   return nums && validStrings && length;
 };
 
