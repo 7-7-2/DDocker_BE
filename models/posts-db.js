@@ -109,7 +109,7 @@ exports.getFollowingPosts = async postReq => {
   return (
     data && {
       results: data,
-      next: data.length < 5 ? null : Number(pageNum) + 1
+      next: data.length < 5 ? undefined : Number(pageNum) + 1
     }
   );
 };
