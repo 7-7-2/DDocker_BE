@@ -14,7 +14,6 @@ module.exports = {
     const getConn = await conn.getConnection();
     const result = await getConn.query(sql).catch(err => console.log(err));
     getConn.release();
-    console.log(result[0]);
     return result[0] ? result[0] : null;
   }
 };
