@@ -53,8 +53,8 @@ exports.updatePost = async postReq => {
 };
 
 exports.writeComment = async postReq => {
-  const [userId, postId, comment] = await postReq;
-  const params = [userId, postId, comment.content];
+  const [userId, postId, content] = await postReq;
+  const params = [userId, postId, content];
   const result = await connectAndQuery(PostQueries.writeComment, params);
   const data = result[0];
   return data && data;
@@ -70,7 +70,7 @@ exports.deleteComment = async postReq => {
 
 exports.replyComment = async postReq => {
   const [userId, commentId, reply] = await postReq;
-  const params = [userId, commentId, reply.content];
+  const params = [userId, commentId, reply];
   const result = await connectAndQuery(PostQueries.replyComment, params);
   const data = result[0];
   return data && data;

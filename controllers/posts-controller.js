@@ -37,7 +37,7 @@ exports.updatePost = async (req, res) => {
 };
 // 5. 댓글 작성(+JWT 인증)
 exports.writeComment = async (req, res) => {
-  const postReq = [req.userId, req.params.postId, req.body];
+  const postReq = [req.userId, req.params.postId, req.body.content];
   const postRes = await PostService.writeComment(postReq);
   return (
     postRes &&
@@ -55,7 +55,7 @@ exports.deleteComment = async (req, res) => {
 };
 // 7. 답글 작성(+JWT 인증)
 exports.replyComment = async (req, res) => {
-  const postReq = [req.userId, req.params.commentId, req.body];
+  const postReq = [req.userId, req.params.commentId, req.body.content];
   const postRes = await PostService.replyComment(postReq);
   return (
     postRes &&
