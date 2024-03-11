@@ -14,7 +14,9 @@ exports.registerPost = async (req, res) => {
   const postRes = await PostService.registerPost(postReq);
   return (
     postRes &&
-    res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
+    res
+      .status(200)
+      .json({ success: postRes !== undefined ? 'ok' : null, data: postRes })
   );
 };
 // 3. 포스트 삭제(+JWT 인증)

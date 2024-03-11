@@ -20,6 +20,7 @@ exports.getPostDetail = async postReq => {
 exports.registerPost = async postReq => {
   const { brand, menu, post_title, size, shot, caffeine, photo } =
     await postReq[1];
+  const post_id = nanoid();
   const params = [
     postReq[0],
     brand,
@@ -29,11 +30,11 @@ exports.registerPost = async postReq => {
     shot,
     caffeine,
     photo,
-    nanoid()
+    post_id
   ];
   const result = await connectAndQuery(PostQueries.registerPost, params);
   const data = result[0];
-  return data && data;
+  return data && post_id;
 };
 
 exports.deletePost = async postReq => {
