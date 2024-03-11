@@ -66,7 +66,6 @@ const checkUserNickname = async req => {
 
 const getUserPosts = async req => {
   const pages = 18 * req[1];
-  // const sql = `SELECT JSON_ARRAYAGG(photo, public_id as postId)  FROM post WHERE user_id = '${req[0]}' ORDER BY created_at DESC LIMIT 18 OFFSET ${pages};`;
   const sql = ` SELECT
     (SELECT COUNT(*) FROM post WHERE user_id = '${req[0]}') AS 'allCount',
     JSON_ARRAYAGG(
