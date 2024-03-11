@@ -39,7 +39,7 @@ const editProfile = async (req, res) => {
 };
 
 const getUserInfo = async (req, res) => {
-  const userId = req.params.userId === 0 ? req.params.userId : req.userId;
+  const userId = req.params.userId === 0 ? req.userId : req.params.userId;
   const userInfo = await userService.getUserInfo(userId);
   return userInfo && res.status(200).json({ success: 'ok', data: userInfo });
 };
@@ -52,9 +52,22 @@ const checkUserNickname = async (req, res) => {
 
 const getUserPosts = async (req, res) => {
   const userId = req.params.userId;
-  const pages = req.params.pages;
-  const posts = await userService.getUserPosts([userId, pages]);
-  return posts && res.status(200).json({ success: 'ok', data: posts });
+  const pages = Number(req.params.pages);
+  const result = await userService.getUserPosts([userId, pages]);
+  const { posts, allCount } = result;
+  return (
+    result &&
+    res.status(200).json({
+      success: 'ok',
+      data: result,
+      next:
+        posts.length < 18
+          ? null
+          : allCount === pages + posts.length
+            ? null
+            : pages + 1
+    })
+  );
 };
 
 const getUserFollowsCount = async (req, res) => {
