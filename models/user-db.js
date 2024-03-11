@@ -33,7 +33,7 @@ const getUserAuthInfo = async req => {
 
 const getUserInfo = async req => {
   const sql =
-    'SELECT nickname, brand, sum, profileUrl FROM user WHERE  public_id = ?';
+    'SELECT nickname, brand, sum, profileUrl,public_id as userId FROM user WHERE public_id = ?';
   const conn = await db();
   const getConn = await conn.getConnection();
   const resault = await getConn.query(sql, req).catch(err => console.log(err));
@@ -65,13 +65,29 @@ const checkUserNickname = async req => {
 };
 
 const getUserPosts = async req => {
-  const pages = 24 * req[1];
-  const sql = `SELECT photo, public_id FROM post WHERE user_id = '${req[0]}' ORDER BY created_at DESC LIMIT 24 OFFSET ${pages};`;
+  const pages = 18 * req[1];
+  // const sql = `SELECT JSON_ARRAYAGG(photo, public_id as postId)  FROM post WHERE user_id = '${req[0]}' ORDER BY created_at DESC LIMIT 18 OFFSET ${pages};`;
+  const sql = ` SELECT
+    (SELECT COUNT(*) FROM post WHERE user_id = '${req[0]}') AS 'allCount',
+    JSON_ARRAYAGG(
+      JSON_OBJECT(
+        'photo', s.photo,
+        'postId', s.postId
+      )
+    ) AS 'posts'
+  FROM ( SELECT photo, public_id as postId FROM
+    post
+  WHERE
+    user_id = '${req[0]}'
+  ORDER BY
+    created_at DESC
+  LIMIT 18 OFFSET ${pages}) as s;`;
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql).catch(err => console.log(err));
+  const posts = result[0][0].posts.length;
   getConn.release();
-  return result[0].length !== 0 ? result[0] : null;
+  return posts !== 0 ? result[0][0] : null;
 };
 
 const getUserFollowingCount = async req => {
