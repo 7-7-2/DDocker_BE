@@ -5,7 +5,8 @@ const config = require('../config/db-config');
 const conn = async () => {
   const connection = mysql.createPool({
     ...config,
-    connectionLimit: 10
+    connectionLimit: 20,
+    connectTimeout: 5000
   });
   return connection;
 };
