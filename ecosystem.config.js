@@ -4,7 +4,7 @@ module.exports = {
       name: 'DDocker_API',
       script: 'app.js',
       cwd: './',
-      instances: 1,
+      instances: 4,
       autorestart: true,
       watch: true,
       ignore_watch: ['logs'],
