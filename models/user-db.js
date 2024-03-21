@@ -33,12 +33,12 @@ const getUserAuthInfo = async req => {
 
 const getUserInfo = async req => {
   const sql =
-    'SELECT nickname, brand, sum, profileUrl,public_id as userId FROM user WHERE public_id = ?';
+    'SELECT nickname, brand, sum, profileUrl,public_id as userId, aboutMe FROM user WHERE public_id = ?';
   const conn = await db();
   const getConn = await conn.getConnection();
-  const resault = await getConn.query(sql, req).catch(err => console.log(err));
+  const result = await getConn.query(sql, req).catch(err => console.log(err));
   getConn.release();
-  return resault[0][0]['nickname'] ? resault[0][0] : null;
+  return result[0][0]['nickname'] ? result[0][0] : null;
 };
 
 const patchUserInfo = async req => {
