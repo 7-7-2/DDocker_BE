@@ -39,7 +39,7 @@ const editProfile = async (req, res) => {
 };
 
 const getUserInfo = async (req, res) => {
-  const userId = req.params.userId === 0 ? req.userId : req.params.userId;
+  const userId = req.params.userId === '0' ? req.userId : req.params.userId;
   const userInfo = await userService.getUserInfo(userId);
   return userInfo && res.status(200).json({ success: 'ok', data: userInfo });
 };
