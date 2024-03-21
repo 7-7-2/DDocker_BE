@@ -63,5 +63,9 @@ module.exports = {
   getRanking: async (req, res) => {
     const result = await postsDB.getRanking(req);
     return result ? result : Promise.reject('Failed to get ranking');
+  },
+  getDailyPopular: async (req, res) => {
+    const result = await postsDB.getDailyPopular(req);
+    return result ? result : Promise.reject('Failed to get daily popular');
   }
 };

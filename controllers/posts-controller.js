@@ -111,8 +111,15 @@ exports.getSocialCounts = async (req, res) => {
 };
 // 13. 메인 페이지 브랜드 순위 조회
 exports.getRanking = async (req, res) => {
-  const postReq = req.userId;
-  const postRes = (await postReq) && (await PostService.getRanking(req));
+  const postRes = await PostService.getRanking(req);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};
+//14. 피드 상단 인기 게시글 조회
+exports.getDailyPopular = async (req, res) => {
+  const postRes = await PostService.getDailyPopular(req);
   return (
     postRes &&
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
