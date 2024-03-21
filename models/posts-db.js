@@ -123,7 +123,7 @@ exports.getSocialCounts = async postReq => {
   return data && data;
 };
 
-exports.getRanking = async postReq => {
+exports.getRanking = async () => {
   const rec = await connectAndQuery(PostQueries.getRecentRanking);
   const weekly = rec && rec[0].map(i => i.brand);
   const lackOf = rec && 5 - rec[0].length;
@@ -136,4 +136,9 @@ exports.getRanking = async postReq => {
   const result = rec &&
     accPopular && [...rec[0], ...range.map(i => accPopular[i])];
   return rec[0].length >= 5 ? rec[0] : result;
+};
+
+exports.getDailyPopular = async () => {
+  const result = await connectAndQuery(PostQueries.getDailyPopular);
+  return result[0];
 };

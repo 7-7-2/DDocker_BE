@@ -125,7 +125,19 @@ const queries = {
   FROM post 
   GROUP BY brand 
   ORDER BY COUNT(brand) DESC;`,
-  buildPatchQuery: query.buildPatchQuery
+  buildPatchQuery: query.buildPatchQuery,
+  getDailyPopular: `
+  SELECT p.photo, p.brand, p.menu, p.shot, p.caffeine
+  FROM post p
+  JOIN (
+      SELECT post_id, COUNT(*) AS like_count
+      FROM likes
+      GROUP BY post_id
+  ) l ON p.public_id = l.post_id
+  WHERE DATE(p.created_at) = CURDATE()
+  ORDER BY l.like_count DESC 
+  LIMIT 4;
+  `
 };
 
 module.exports = queries;

@@ -5,137 +5,55 @@ const errorHandler = require('../middlewares/errorHandler');
 const AuthMiddleware = require('../middlewares/authMiddleware');
 
 router.get(
+  '/posts/popular/daily',
+  errorHandler(postController.getDailyPopular)
+);
+
+router.get('/posts/popular', errorHandler(postController.getRanking));
+
+router.get(
   '/posts/following/:pageNum',
   AuthMiddleware.verifyToken,
   errorHandler(postController.getFollowingPosts)
-  // #swagger.tags = ['POSTS']
-  // #swagger.summary = '로그인한 유저가 팔로잉 중인 유저의 게시물들 조회'
-  // #swagger.responses[200] = { description: 'OK' }
-  // #swagger.responses[400] = { description: 'Bad Request' }
-  // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
 router
   .route('/posts/:postId')
-  .get(
-    errorHandler(postController.getPostDetail)
-    // #swagger.tags = ['POSTS']
-    // #swagger.summary = '게시글 상세 정보 조회'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  )
-  .patch(
-    AuthMiddleware.verifyToken,
-    errorHandler(postController.updatePost)
-    // #swagger.tags = ['POSTS']
-    // #swagger.summary = '게시글 수정'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  )
-  .delete(
-    AuthMiddleware.verifyToken,
-    errorHandler(postController.deletePost)
-    // #swagger.tags = ['POSTS']
-    // #swagger.summary = '게시글 삭제'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  );
+  .get(errorHandler(postController.getPostDetail))
+  .patch(AuthMiddleware.verifyToken, errorHandler(postController.updatePost))
+  .delete(AuthMiddleware.verifyToken, errorHandler(postController.deletePost));
 
 router.post(
   '/posts/register',
   AuthMiddleware.verifyToken,
   errorHandler(postController.registerPost)
-  // #swagger.tags = ['POSTS']
-  // #swagger.summary = '게시글 작성'
-  // #swagger.responses[200] = { description: 'OK' }
-  // #swagger.responses[400] = { description: 'Bad Request' }
-  // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
 router
   .route('/posts/:postId/comments')
-  .post(
-    AuthMiddleware.verifyToken,
-    errorHandler(postController.writeComment)
-    // #swagger.tags = ['POSTS']
-    // #swagger.summary = '댓글 작성'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  )
-  .get(
-    errorHandler(postController.getComments)
-    // #swagger.tags = ['POSTS']
-    // #swagger.summary = '게시글 댓글 목록 조회'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  );
+  .post(AuthMiddleware.verifyToken, errorHandler(postController.writeComment))
+  .get(errorHandler(postController.getComments));
 
 router.delete(
   '/posts/:postId/comments/:commentId',
   AuthMiddleware.verifyToken,
   errorHandler(postController.deleteComment)
-  // #swagger.tags = ['POSTS']
-  // #swagger.summary = '댓글 삭제'
-  // #swagger.responses[200] = { description: 'OK' }
-  // #swagger.responses[400] = { description: 'Bad Request' }
-  // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
 router
   .route('/posts/:commentId/reply')
-  .post(
-    AuthMiddleware.verifyToken,
-    errorHandler(postController.replyComment)
-    // #swagger.tags = ['POSTS']
-    // #swagger.summary = '답글 작성'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  )
-  .get(
-    errorHandler(postController.getReply)
-    // #swagger.tags = ['POSTS']
-    // #swagger.summary = '댓글에서 더보기 클릭시 답글 조회'
-    // #swagger.responses[200] = { description: 'OK' }
-    // #swagger.responses[400] = { description: 'Bad Request' }
-    // #swagger.responses[500] = { description: 'Internal Server Error' }
-  );
+  .post(AuthMiddleware.verifyToken, errorHandler(postController.replyComment))
+  .get(errorHandler(postController.getReply));
 
 router.delete(
   '/posts/reply/:replyId',
   AuthMiddleware.verifyToken,
   errorHandler(postController.deleteReply)
-  // #swagger.tags = ['POSTS']
-  // #swagger.summary = '답글 삭제'
-  // #swagger.responses[200] = { description: 'OK' }
-  // #swagger.responses[400] = { description: 'Bad Request' }
-  // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
 router.get(
   '/posts/:postId/counts',
   errorHandler(postController.getSocialCounts)
-  // #swagger.tags = ['POSTS']
-  // #swagger.summary = '게시글 내부 댓글+답글 수 및 좋아요 수 조회'
-  // #swagger.responses[200] = { description: 'OK' }
-  // #swagger.responses[400] = { description: 'Bad Request' }
-  // #swagger.responses[500] = { description: 'Internal Server Error' }
-);
-
-router.get(
-  '/popular',
-  AuthMiddleware.verifyToken,
-  errorHandler(postController.getRanking)
-  // #swagger.tags = ['POSTS']
-  // #swagger.summary = '인기 브랜드 순위 조회'
-  // #swagger.responses[200] = { description: 'OK' }
-  // #swagger.responses[400] = { description: 'Bad Request' }
-  // #swagger.responses[500] = { description: 'Internal Server Error' }
 );
 
 module.exports = router;
