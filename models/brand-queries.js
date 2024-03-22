@@ -9,7 +9,7 @@ const queries = {
   ORDER BY menu_count DESC
   LIMIT 1;`,
   getBrandRecentPosts: `SELECT 
-  a.brand, a.menu, a.post_title,size, a.shot,caffeine, a.photo, a.created_at, 
+  a.brand, a.menu, a.post_title as postTitle, a.size, a.shot,caffeine, a.photo, a.created_at as createdAt, a.public_id as postId,
   u.profileUrl, u.nickname, u.sum, u.public_id AS userId
   FROM post a
   INNER JOIN user u ON a.user_id = u.public_id
