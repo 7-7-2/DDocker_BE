@@ -13,7 +13,7 @@ const queries = {
   u.profileUrl, u.nickname, u.sum, u.public_id AS userId
   FROM post a
   INNER JOIN user u ON a.user_id = u.public_id
-  WHERE a.brand = ?
+  WHERE WEEK(a.created_at) = WEEK(NOW()) AND YEAR(a.created_at) = YEAR(NOW()) AND a.brand = ?
   ORDER BY a.created_at DESC
   LIMIT 8;
   `,
@@ -25,13 +25,13 @@ const queries = {
     GROUP BY l.post_id
   )
   SELECT
-  p.brand, p.menu, p.post_title, p.size, p.shot, p.caffeine, p.photo, p.created_at,
+  p.brand, p.menu, p.post_title as postTitle, p.size, p.shot, p.caffeine, p.photo, p.created_at as createdAt, p.public_id as postId,
   u.profileUrl, u.nickname, u.sum, u.public_id AS userId, like_count
   FROM
     post p
   LEFT JOIN TotalLikes l ON p.public_id = l.post_id
   INNER JOIN user u ON p.user_id = u.public_id
-  WHERE WEEK(created_at) = WEEK(NOW()) AND YEAR(created_at) = YEAR(NOW()) AND
+  WHERE WEEK(p.created_at) = WEEK(NOW()) AND YEAR(p.created_at) = YEAR(NOW()) AND
   p.brand = ?
   ORDER BY like_count DESC
   LIMIT 8;
