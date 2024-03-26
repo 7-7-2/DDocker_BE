@@ -127,7 +127,7 @@ const queries = {
   ORDER BY COUNT(brand) DESC;`,
   buildPatchQuery: query.buildPatchQuery,
   getDailyPopular: `
-  SELECT p.photo, p.brand, p.menu, p.shot, p.caffeine
+  SELECT p.photo, p.brand, p.menu, p.shot, p.caffeine, p.public_id as postId
   FROM post p
   JOIN (
       SELECT post_id, COUNT(*) AS like_count
