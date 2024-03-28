@@ -1,8 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const swaggerUI = require('swagger-ui-express');
-const swaggerFile = require('../swagger-output.json');
 const { CREDENTIALS, ORIGIN } = require('../config/index');
 
 module.exports = async ({ app }) => {
@@ -25,7 +23,6 @@ module.exports = async ({ app }) => {
   app.use(require('morgan')('dev'));
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
-  app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerFile));
   // __dirname: path 모듈 내장 변수, 현재 디렉토리 경로 (__filename: 현재 파일 경로)
   const routesPath = path.join(__dirname, '../routes');
   //디렉토리 내 파일들을 동기적으로 읽어들여 middleware적용
