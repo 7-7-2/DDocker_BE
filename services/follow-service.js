@@ -24,5 +24,9 @@ module.exports = {
       : result === 0
         ? false
         : Promise.reject('Failed to check if following or not');
+  },
+  getUsernameById: async (req, res) => {
+    const result = await followDB.getUsernameById(req);
+    return result ? result : Promise.reject('Failed to get username by id');
   }
 };
