@@ -2,7 +2,6 @@ const FollowService = require('../services/follow-service');
 
 // 1. 유저 팔로우
 exports.followUser = async (req, res) => {
-  // req.userId;
   const postReq = [req.userId, req.params.userId];
   const postRes = await FollowService.followUser(postReq);
   return (
@@ -21,7 +20,7 @@ exports.unfollowUser = async (req, res) => {
 };
 // 3. 유저의(:userId) 팔로잉 목록 확인
 exports.getFollowingList = async (req, res) => {
-  const postReq = req.params.userId;
+  const postReq = [req.params.userId, req.params.pageNum];
   const postRes = await FollowService.getFollowingList(postReq);
   return (
     postRes &&
@@ -30,7 +29,7 @@ exports.getFollowingList = async (req, res) => {
 };
 // 4. 유저의(:userId) 팔로우 목록 확인
 exports.getFollowerList = async (req, res) => {
-  const postReq = req.params.userId;
+  const postReq = [req.params.userId, req.params.pageNum];
   const postRes = await FollowService.getFollowerList(postReq);
   return (
     postRes &&
@@ -42,4 +41,13 @@ exports.checkFollowing = async (req, res) => {
   const postReq = [req.userId, req.params.userId];
   const postRes = await FollowService.checkFollowing(postReq);
   return res.status(200).json({ data: postRes !== undefined ? postRes : null });
+};
+// 6. 팔로우 페이지 헤더 유저이름
+exports.getUsernameById = async (req, res) => {
+  const postReq = req.params.userId;
+  const postRes = await FollowService.getUsernameById(postReq);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
 };

@@ -16,6 +16,7 @@ const queries = {
   checkFollowing: `SELECT 
   COUNT(*)
   FROM follows
-  WHERE following_user_id = ? AND followed_user_id = ?`
+  WHERE following_user_id = ? AND followed_user_id = ?`,
+  getUsernameById: `SELECT user.nickname FROM user WHERE public_id = ?`
 };
 module.exports = queries;

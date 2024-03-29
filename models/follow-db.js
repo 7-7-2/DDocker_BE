@@ -24,18 +24,30 @@ exports.unfollowUser = async postReq => {
   return data && data;
 };
 exports.getFollowingList = async postReq => {
-  const targetId = await postReq;
-  const params = [targetId];
+  const [targetId, pageNum] = await postReq;
+  const offset = pageNum && (pageNum - 1) * 10;
+  const params = [targetId, offset];
   const result = await connectAndQuery(FollowQueries.getFollowingList, params);
   const data = result[0];
-  return data && data;
+  return (
+    data && {
+      results: data,
+      next: data.length < 10 ? undefined : Number(pageNum) + 1
+    }
+  );
 };
 exports.getFollowerList = async postReq => {
-  const targetId = await postReq;
-  const params = [targetId];
+  const [targetId, pageNum] = await postReq;
+  const offset = pageNum && (pageNum - 1) * 10;
+  const params = [targetId, offset];
   const result = await connectAndQuery(FollowQueries.getFollowerList, params);
   const data = result[0];
-  return data && data;
+  return (
+    data && {
+      results: data,
+      next: data.length < 10 ? undefined : Number(pageNum) + 1
+    }
+  );
 };
 exports.checkFollowing = async postReq => {
   const [myId, targetId] = await postReq;
@@ -43,4 +55,11 @@ exports.checkFollowing = async postReq => {
   const result = await connectAndQuery(FollowQueries.checkFollowing, params);
   const data = result[0][0]['COUNT(*)'];
   return data !== 0 ? true : 0;
+};
+exports.getUsernameById = async postReq => {
+  const targetId = await postReq;
+  const params = [targetId];
+  const result = await connectAndQuery(FollowQueries.getUsernameById, params);
+  const data = result[0][0]['nickname'];
+  return data !== null ? data : null;
 };

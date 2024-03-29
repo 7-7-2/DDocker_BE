@@ -17,13 +17,18 @@ router
   );
 
 router.get(
-  '/follow/:userId/following',
+  '/follow/:userId/following/:pageNum',
   errorHandler(FollowController.getFollowingList)
 );
 
 router.get(
-  '/follow/:userId/follower',
+  '/follow/:userId/follower/:pageNum',
   errorHandler(FollowController.getFollowerList)
+);
+
+router.get(
+  '/follow/:userId/username',
+  errorHandler(FollowController.getUsernameById)
 );
 
 module.exports = router;
