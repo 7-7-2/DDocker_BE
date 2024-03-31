@@ -4,23 +4,14 @@ const AuthMiddleware = require('../middlewares/authMiddleware');
 const errorHandler = require('../middlewares/errorHandler');
 const userController = require('../controllers/user-controller');
 
-router.get(
-  '/users/signIn',
-  errorHandler(userController.signIn)
-);
+router.get('/users/signIn', errorHandler(userController.signIn));
 router.get(
   '/users/google/redirect',
   errorHandler(userController.googleRedirect)
 );
-router.get(
-  '/users/kakao/redirect',
-  errorHandler(userController.kakaoRedirect)
-);
+router.get('/users/kakao/redirect', errorHandler(userController.kakaoRedirect));
 
-router.get(
-  '/users/check',
-  errorHandler(userController.checkUserNickname)
-);
+router.get('/users/check', errorHandler(userController.checkUserNickname));
 
 router.post(
   '/users',
@@ -28,17 +19,12 @@ router.post(
   errorHandler(userController.setInitForm)
 );
 
-router.patch(
-  '/users/userInfo',
-  AuthMiddleware.verifyToken,
-  errorHandler(userController.editProfile)
-);
+router
+  .route('/users/userInfo')
+  .get(AuthMiddleware.verifyToken, errorHandler(userController.getUserInfo))
+  .patch(AuthMiddleware.verifyToken, errorHandler(userController.editProfile));
 
-router.get(
-  '/users/:userId/userInfo',
-  AuthMiddleware.verifyToken,
-  errorHandler(userController.getUserInfo)
-);
+router.get('/users/:userId/userInfo', errorHandler(userController.getUserInfo));
 
 router.get(
   '/users/:userId/follow',
@@ -47,7 +33,6 @@ router.get(
 
 router.get(
   '/users/:userId/posts/:pages',
-  AuthMiddleware.verifyToken,
   errorHandler(userController.getUserPosts)
 );
 
