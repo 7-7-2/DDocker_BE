@@ -79,18 +79,19 @@ const kakaoSignIn = async res => {
 };
 
 const getKakaoAuth = async code => {
+  console.log(code);
   const data = new URLSearchParams({
-    code,
+    grant_type: 'authorization_code',
     client_id: KAKAO_CLIENT_ID,
     redirect_uri: KAKAO_REDIRECT_URI,
-    grant_type: 'authorization_code'
+    code
   });
 
   const req = await fetch(KAKAO_TOKEN_URL, {
     method: 'POST',
     body: data,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     }
   });
 
@@ -160,7 +161,10 @@ const setUserInit = async req => {
 
 // USER INFO
 const getUserInfo = async userId => {
+  console.log(userId);
   const result = await userDB.getUserInfo(userId);
+  console.log('🚀 ~ getUserInfo ~ result:', result);
+
   return result
     ? result
     : result === null
@@ -170,8 +174,8 @@ const getUserInfo = async userId => {
 
 // DDOCKER ACCESS_TOKEN
 const getAccessToken = async userId => {
-  const user = { userId };
-  const accessToken = jwt.sign(user, ACCESS_TOKEN_SECRET);
+  const user = { userId: userId };
+  const accessToken = jwt.sign({ userId: userId }, ACCESS_TOKEN_SECRET);
   return accessToken
     ? `Bearer ${accessToken}`
     : await Promise.reject('Failed to get DDocker accessToken');

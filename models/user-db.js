@@ -15,7 +15,7 @@ const setUserInit = async req => {
     'UPDATE user SET nickname=?, gender=?, brand=?, sum = 0 WHERE  public_id = ?';
   const conn = await db();
   const getConn = await conn.getConnection();
-  await getConn.query(sql, req).catch(err => console.log(err));
+  const result = await getConn.query(sql, req).catch(err => console.log(err));
   getConn.release();
   return result[0] ? result[0] : null;
 };
@@ -84,9 +84,9 @@ const getUserPosts = async req => {
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql).catch(err => console.log(err));
-  const posts = result[0][0].posts.length;
+  const posts = result[0][0].posts;
   getConn.release();
-  return posts !== 0 ? result[0][0] : null;
+  return posts ? result[0][0] : { allCount: 0, posts: null };
 };
 
 const getUserFollowingCount = async req => {

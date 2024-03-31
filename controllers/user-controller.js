@@ -3,12 +3,13 @@ const userService = require('../services/user-service');
 const signIn = async (req, res) => {
   const { social } = req.query;
 
-  if (social === 'google') {
-    url = await userService.googleSignIn(res);
-  }
   if (social === 'kakao') {
     url = await userService.kakaoSignIn(res);
   }
+  if (social === 'google') {
+    url = await userService.googleSignIn(res);
+  }
+
   return res.status(200).json({ url, social });
 };
 
@@ -28,7 +29,7 @@ const kakaoRedirect = async (req, res) => {
 
 const setInitForm = async (req, res) => {
   const body = await req.body;
-  const initReq = [body.nickName, body.gender, body.brand, req.userId];
+  const initReq = [body.nickname, body.gender, body.brand, req.userId];
   const result = await userService.setUserInit(initReq);
   return result && res.status(201).json('success: Created');
 };
@@ -39,7 +40,7 @@ const editProfile = async (req, res) => {
 };
 
 const getUserInfo = async (req, res) => {
-  const userId = req.params.userId === '0' ? req.userId : req.params.userId;
+  const userId = req.userId || req.params.userId;
   const userInfo = await userService.getUserInfo(userId);
   return userInfo && res.status(200).json({ success: 'ok', data: userInfo });
 };
@@ -61,9 +62,9 @@ const getUserPosts = async (req, res) => {
       success: 'ok',
       data: result,
       next:
-        posts.length < 18
+        (posts && posts.length) < 18
           ? null
-          : allCount === pages + posts.length
+          : allCount === pages + (posts && posts.length)
             ? null
             : pages + 1
     })
