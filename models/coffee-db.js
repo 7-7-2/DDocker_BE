@@ -25,7 +25,7 @@ exports.getDaySum = async ({ getReq, date }) => {
   const params = [getReq];
   const result = await executeQuery(
     `
-            SELECT COUNT(*) AS CountSum, CAST(COALESCE(SUM(caffeine), 0) AS INT) AS CaffeineSum
+            SELECT COUNT(*) AS CountSum, CAST(COALESCE(SUM(caffeine), 0) AS UNSIGNED) AS CaffeineSum
             FROM post
             WHERE user_id = ? AND ${date.query}
         `,
@@ -34,14 +34,13 @@ exports.getDaySum = async ({ getReq, date }) => {
   return result;
 };
 
-exports.getCalendar = async ({ getReq }) => {
-  const params = [getReq];
+exports.getCalendar = async getReq => {
+  const params = getReq;
   const result = await executeQuery(
     `
-        SELECT DAY(created_at) as day, CAST(COALESCE(SUM(caffeine), 0) as CaffeineSum
-        FROM post
-        WHERE user_id = ? AND YEAR(created_at) = YEAR(CURRENT_DATE) AND MONTH(created_at) = MONTH(CURRENT_DATE)
-        GROUP BY DAY(created_at)
+    SELECT DAY(created_at) as day, SUM(caffeine) as caffeineSum 
+    FROM post
+    WHERE user_id = ? AND YEAR(created_at) AND MONTH(created_at) = MONTH(?) GROUP BY DAY(created_at)
     `,
     params
   );

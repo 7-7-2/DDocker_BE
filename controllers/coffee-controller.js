@@ -24,8 +24,9 @@ module.exports = {
   },
 
   getCalendar: async (req, res) => {
-    const getReq = req.userId;
-    const setRes = await coffeeService.getCalendar({ getReq }).catch(err => {
+    const activeMonth = req.params.activeMonth;
+    const getReq = [req.userId, activeMonth];
+    const setRes = await coffeeService.getCalendar(getReq).catch(err => {
       res.status(500).json({
         message: err
       });
