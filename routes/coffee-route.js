@@ -17,10 +17,9 @@ router.get(
 );
 
 router.get(
-  '/coffee/calendar',
+  '/coffee/calendar/:activeMonth',
   AuthMiddleware.verifyToken,
   errorHandler(coffeeController.getCalendar)
 );
 
 module.exports = router;
-

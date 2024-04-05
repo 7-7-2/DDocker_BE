@@ -79,7 +79,6 @@ const kakaoSignIn = async res => {
 };
 
 const getKakaoAuth = async code => {
-  console.log(code);
   const data = new URLSearchParams({
     grant_type: 'authorization_code',
     client_id: KAKAO_CLIENT_ID,

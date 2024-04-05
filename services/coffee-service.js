@@ -24,33 +24,22 @@ module.exports = {
 
   getCalendar: async (req, res) => {
     const sum = await coffeeDB.getCalendar(req);
+    const days = sum.map(item => {
+      const day = item.day.toString().padStart(2, '0');
+      const month = req[1].split('-')[1];
+      const caffeineSum = item.caffeineSum;
+      const days = {
+        day: `${month}-${day}`,
+        caffeineSum: caffeineSum
+      };
+      return days;
+    });
 
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1;
-    const lastDayOfMonth = new Date(currentYear, currentMonth, 0).getDate();
     const result = {
-      Calendar: [
-        {
-          year: currentYear,
-          month: currentMonth,
-          days: {}
-        }
-      ]
+      year: req[1].split('-')[0],
+      month: req[1].split('-')[1],
+      days: days
     };
-    if (sum && sum.length > 0) {
-      sum.forEach(row => {
-        const day = row.day;
-        const caffeineSum = row.CaffeineSum;
-
-        if (day <= lastDayOfMonth) {
-          result.Calendar[0].days[day] = {
-            caffeineSum: caffeineSum,
-            recommend: caffeineSum >= 400 ? 'true' : 'false'
-          };
-        }
-      });
-    }
     return result ? result : Promise.reject('Failed to get calendar');
   }
 };
