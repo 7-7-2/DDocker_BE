@@ -21,28 +21,25 @@ exports.getCoffeeInfoSum = async getReq => {
   return res;
 };
 
-exports.getDaySum = async ({ getReq, date }) => {
-  const params = [getReq];
+exports.getDaySum = async ({ userid, date }) => {
+  console.log(userid, date.query);
   const result = await executeQuery(
     `
             SELECT COUNT(*) AS CountSum, CAST(COALESCE(SUM(caffeine), 0) AS UNSIGNED) AS CaffeineSum
             FROM post
-            WHERE user_id = ? AND ${date.query}
-        `,
-    params
+            WHERE user_id = '${userid}' AND ${date.query}
+        `
   );
   return result;
 };
 
 exports.getCalendar = async getReq => {
-  const params = getReq;
   const result = await executeQuery(
     `
     SELECT DAY(created_at) as day, SUM(caffeine) as caffeineSum 
     FROM post
-    WHERE user_id = ? AND YEAR(created_at) AND MONTH(created_at) = MONTH(?) GROUP BY DAY(created_at)
-    `,
-    params
+    WHERE user_id = '${getReq[0]}' AND YEAR(created_at) = YEAR('${getReq[1]}') AND MONTH(created_at) = MONTH('${getReq[1]}') GROUP BY DAY(created_at)
+    `
   );
   return result;
 };

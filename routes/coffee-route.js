@@ -11,7 +11,7 @@ router.get(
 );
 
 router.get(
-  '/coffee/caffeine',
+  '/coffee/caffeine/:activeMonth',
   AuthMiddleware.verifyToken,
   errorHandler(coffeeController.getDaySum)
 );
