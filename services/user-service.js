@@ -143,12 +143,16 @@ const setUserOauth = async (req, res) => {
     const result = await getAccessToken(userId);
 
     return result
-      ? await res.status(201).json({ success: 'Created', accessToken: result })
+      ? await res
+          .status(201)
+          .json({ success: 'Created', accessToken: result, userId: userId })
       : await Promise.reject('Failed to social login');
   }
 
   return result
-    ? await res.status(200).json({ success: 'OK', accessToken: result })
+    ? await res
+        .status(200)
+        .json({ success: 'OK', accessToken: result, userId: userId })
     : await Promise.reject('Failed to social login');
 };
 
@@ -162,8 +166,6 @@ const setUserInit = async req => {
 const getUserInfo = async userId => {
   console.log(userId);
   const result = await userDB.getUserInfo(userId);
-  console.log('🚀 ~ getUserInfo ~ result:', result);
-
   return result
     ? result
     : result === null
