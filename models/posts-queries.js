@@ -3,7 +3,7 @@ const query = require('./query-fns');
 //TODO: SELECT 함수화
 const queries = {
   getPostDetail: `SELECT 
-  a.brand, a.menu, a.post_title,size, a.shot,caffeine, a.photo, a.created_at, b.profileUrl, b.nickname, b.sum 
+  a.brand, a.menu, a.post_title,size, a.shot,caffeine, a.photo, a.created_at, b.profileUrl, b.nickname, b.sum, b.public_id AS userId 
   FROM post a 
   LEFT JOIN user b 
   ON a.user_id = b.public_id 

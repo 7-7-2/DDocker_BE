@@ -1,6 +1,5 @@
 const db = require('../loaders/db');
 const PostQueries = require('./posts-queries');
-const { nanoid } = require('nanoid');
 
 const connectAndQuery = async (...queryAndParam) => {
   const conn = await db();
