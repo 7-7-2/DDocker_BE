@@ -8,6 +8,7 @@ brandMap.set('theventi', '더벤티');
 brandMap.set('megacoffee', '메가커피');
 brandMap.set('compose', '컴포즈커피');
 brandMap.set('pascucci', '파스쿠찌');
+brandMap.set('bbak', '빽다방');
 
 const switchBrand = brand => {
   return brandMap.get(brand);
