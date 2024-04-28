@@ -34,6 +34,11 @@ const setInitForm = async (req, res) => {
   return result && res.status(201).json('success: Created');
 };
 
+const deleteAccount = async (req, res) => {
+  const result = await userService.deleteAccount(req.userId);
+  return result && res.status(200).json('success : ok');
+};
+
 const editProfile = async (req, res) => {
   const result = await userService.patchUserProfile([req.body, req.userId]);
   return result && res.status(200).json('success : ok');
@@ -82,6 +87,7 @@ module.exports = {
   kakaoRedirect,
   googleRedirect,
   setInitForm,
+  deleteAccount,
   getUserInfo,
   editProfile,
   checkUserNickname,

@@ -5,19 +5,23 @@ const errorHandler = require('../middlewares/errorHandler');
 const userController = require('../controllers/user-controller');
 
 router.get('/users/signIn', errorHandler(userController.signIn));
+
 router.get(
   '/users/google/redirect',
   errorHandler(userController.googleRedirect)
 );
+
 router.get('/users/kakao/redirect', errorHandler(userController.kakaoRedirect));
 
 router.get('/users/check', errorHandler(userController.checkUserNickname));
 
-router.post(
-  '/users',
-  AuthMiddleware.verifyToken,
-  errorHandler(userController.setInitForm)
-);
+router
+  .route('/users')
+  .post(AuthMiddleware.verifyToken, errorHandler(userController.setInitForm))
+  .delete(
+    AuthMiddleware.verifyToken,
+    errorHandler(userController.deleteAccount)
+  );
 
 router
   .route('/users/userInfo')
