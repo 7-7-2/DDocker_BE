@@ -116,7 +116,7 @@ const queries = {
   getRecentRanking: `SELECT
     brand, COUNT(brand) AS co
     FROM post p
-    WHERE p.created_at BETWEEN DATE_ADD(NOW(), INTERVAL -1 WEEK ) AND NOW()
+    WHERE p.created_at BETWEEN DATE_ADD(NOW(), INTERVAL -1 WEEK ) AND NOW()-1
     GROUP BY brand
     ORDER BY co DESC 
     LIMIT 5;`,
