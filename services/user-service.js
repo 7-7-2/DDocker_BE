@@ -162,9 +162,13 @@ const setUserInit = async req => {
   return result ? result : await Promise.reject('Failed to DDocker Sign up');
 };
 
+const deleteAccount = async req => {
+  const result = await userDB.deleteAccount(req);
+  return result ? result : await Promise.reject('Failed to DDocker Exit');
+};
+
 // USER INFO
 const getUserInfo = async userId => {
-  console.log(userId);
   const result = await userDB.getUserInfo(userId);
   return result
     ? result
@@ -220,6 +224,7 @@ module.exports = {
   setUserInit,
   setUserOauth,
   googleSignIn,
+  deleteAccount,
   getAccessToken,
   getUserInfo,
   getGoogleAuth,

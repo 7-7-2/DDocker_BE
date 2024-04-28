@@ -20,6 +20,15 @@ const setUserInit = async req => {
   return result[0] ? result[0] : null;
 };
 
+const deleteAccount = async req => {
+  const sql = `DELETE FROM user WHERE public_id = '${req}'`;
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const resault = await conn.query(sql, req).catch(err => console.log(err));
+  getConn.release();
+  return resault[0] ? resault[0] : null;
+};
+
 const getUserAuthInfo = async req => {
   const sql =
     'SELECT COUNT(*), public_id FROM user WHERE useremail = ? AND social= ?';
@@ -113,6 +122,7 @@ module.exports = {
   patchUserInfo,
   setUserInit,
   setUserOauth,
+  deleteAccount,
   getUserInfo,
   getUserAuthInfo,
   checkUserNickname,
