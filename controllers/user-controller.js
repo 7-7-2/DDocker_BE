@@ -29,7 +29,7 @@ const kakaoRedirect = async (req, res) => {
 
 const setInitForm = async (req, res) => {
   const body = await req.body;
-  const initReq = [body.nickname, body.gender, body.brand, req.userId];
+  const initReq = [body.nickname, body.aboutMe, body.brand, req.userId];
   const result = await userService.setUserInit(initReq);
   return result && res.status(201).json('success: Created');
 };

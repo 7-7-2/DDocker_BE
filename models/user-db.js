@@ -12,7 +12,7 @@ const setUserOauth = async req => {
 
 const setUserInit = async req => {
   const sql =
-    'UPDATE user SET nickname=?, gender=?, brand=?, sum = 0 WHERE  public_id = ?';
+    'UPDATE user SET nickname=?, aboutMe=?, brand=?, sum = 0 WHERE public_id = ?';
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql, req).catch(err => console.log(err));

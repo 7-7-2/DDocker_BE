@@ -16,14 +16,13 @@ const {
   ACCESS_TOKEN_SECRET
 } = require('../config/index');
 
-// GOOGLE OAUTH
+// GOOGLE OAUTH 소셜로그인
 const googleSignIn = async res => {
   let url = 'https://accounts.google.com/o/oauth2/v2/auth';
   url += `?client_id=${GOOGLE_CLIENT_ID}`;
   url += `&redirect_uri=${GOOGLE_REDIRECT_URI}`;
   url += '&response_type=code';
   url += '&scope=email profile';
-  // res.redirect(url);
   return url;
 };
 
@@ -69,7 +68,7 @@ const getGoogleAuth = async code => {
     : await Promise.reject('Failed to get user profile');
 };
 
-// KAKAO OAUTH
+// KAKAO OAUTH 소셜로그인
 const kakaoSignIn = async res => {
   let url = 'https://kauth.kakao.com/oauth/authorize';
   url += `?client_id=${KAKAO_CLIENT_ID}`;
@@ -126,6 +125,7 @@ const getKakaoAuth = async code => {
     : await Promise.reject('Failed to get user profile');
 };
 
+// 소셜로그인 연동
 const setUserOauth = async (req, res) => {
   const email = req[1];
   const social = req[2];
@@ -156,43 +156,15 @@ const setUserOauth = async (req, res) => {
     : await Promise.reject('Failed to social login');
 };
 
-// DDOCKER SIGN UP
-const setUserInit = async req => {
-  const result = await userDB.setUserInit(req);
-  return result ? result : await Promise.reject('Failed to DDocker Sign up');
-};
-
-const deleteAccount = async req => {
-  const result = await userDB.deleteAccount(req);
-  return result ? result : await Promise.reject('Failed to DDocker Exit');
-};
-
-// USER INFO
-const getUserInfo = async userId => {
-  const result = await userDB.getUserInfo(userId);
-  return result
-    ? result
-    : result === null
-      ? true
-      : await Promise.reject('Failed to get UserInfo');
-};
-
-// DDOCKER ACCESS_TOKEN
+// DDOCKER ACCESS_TOKEN 발급
 const getAccessToken = async userId => {
-  const user = { userId: userId };
   const accessToken = jwt.sign({ userId: userId }, ACCESS_TOKEN_SECRET);
   return accessToken
     ? `Bearer ${accessToken}`
     : await Promise.reject('Failed to get DDocker accessToken');
 };
 
-// EDIT USER PROFILE
-const patchUserProfile = async req => {
-  const result = await userDB.patchUserInfo(req);
-  return result ? result : await Promise.reject('Failed to Edit User Profile');
-};
-
-// CHECK USER NICKNAME
+// DDOCKER 닉네임 중복검사
 const checkUserNickname = async req => {
   const result = await userDB.checkUserNickname(req);
   return result
@@ -202,7 +174,35 @@ const checkUserNickname = async req => {
       : await Promise.reject('Failed to Check Nickname');
 };
 
-//  GET USER POSTS
+// DDOCKER 회원가입
+const setUserInit = async req => {
+  const result = await userDB.setUserInit(req);
+  return result ? result : await Promise.reject('Failed to DDocker Sign up');
+};
+
+// DDOCKER 회원탈퇴
+const deleteAccount = async req => {
+  const result = await userDB.deleteAccount(req);
+  return result ? result : await Promise.reject('Failed to DDocker Exit');
+};
+
+// DDOCKER 회원정보 조회
+const getUserInfo = async userId => {
+  const result = await userDB.getUserInfo(userId);
+  return result
+    ? result
+    : result === null
+      ? true
+      : await Promise.reject('Failed to get UserInfo');
+};
+
+// DDOCKER 회원정보 수정
+const patchUserProfile = async req => {
+  const result = await userDB.patchUserInfo(req);
+  return result ? result : await Promise.reject('Failed to Edit User Profile');
+};
+
+//  프로필 피드 게시물 조회
 const getUserPosts = async req => {
   const result = await userDB.getUserPosts(req);
   return result
@@ -210,7 +210,7 @@ const getUserPosts = async req => {
     : await Promise.reject('Failed to get User Posts');
 };
 
-//  GET USER FOLLOWES COUNT
+//  프로필 피드 팔로워,팔로우 카운트 조회
 const getUserFollowsCount = async userId => {
   const following = await userDB.getUserFollowingCount(userId);
   const followed = await userDB.getUserFollowedCount(userId);
