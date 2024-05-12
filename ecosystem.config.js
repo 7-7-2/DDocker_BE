@@ -7,7 +7,7 @@ module.exports = {
       instances: 4,
       autorestart: true,
       watch: true,
-      ignore_watch: ['logs'],
+      ignore_watch: ['node_modules', 'logs', '.git/FETCH_HEAD'],
       env_local: {
         NODE_ENV: 'local'
       },
