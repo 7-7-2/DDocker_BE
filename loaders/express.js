@@ -16,7 +16,13 @@ module.exports = async ({ app }) => {
     require('cors')({
       origin: ORIGIN,
       credentials: CREDENTIALS,
-      allowedHeaders: ['Content-Type', 'Authorization'],
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'Cache-Control',
+        'Connection',
+        'Access-Control-Allow-Origin'
+      ],
       optionsSuccessStatus: 200
     })
   );
