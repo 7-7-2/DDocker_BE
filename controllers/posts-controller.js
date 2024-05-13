@@ -1,4 +1,6 @@
 const PostService = require('../services/post-service');
+const { storePostNotification } = require('../middlewares/redisQueue');
+
 // 1. 포스트 조회
 exports.getPostDetail = async (req, res) => {
   const postReq = req.params.postId;
@@ -41,6 +43,17 @@ exports.updatePost = async (req, res) => {
 exports.writeComment = async (req, res) => {
   const postReq = [req.userId, req.params.postId, req.body.content];
   const postRes = await PostService.writeComment(postReq);
+  const self = req.userId === postRes[0];
+
+  postRes &&
+    !self &&
+    (await storePostNotification(
+      req.userId,
+      postRes[0],
+      postRes[1],
+      req.params.postId,
+      'comment'
+    ));
   return (
     postRes &&
     res.status(200).json({ success: postRes !== undefined ? 'ok' : null })
