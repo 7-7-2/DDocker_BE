@@ -1,9 +1,12 @@
 const FollowService = require('../services/follow-service');
+const { storeFollowNotification } = require('../middlewares/redisQueue');
 
 // 1. 유저 팔로우
 exports.followUser = async (req, res) => {
   const postReq = [req.userId, req.params.userId];
   const postRes = await FollowService.followUser(postReq);
+  postRes &&
+    (await storeFollowNotification(req.userId, req.params.userId, postRes));
   return (
     postRes &&
     res.status(200).json({ success: postRes !== undefined ? 'ok' : null })

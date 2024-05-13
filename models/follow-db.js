@@ -13,8 +13,12 @@ exports.followUser = async postReq => {
   const [myId, targetId] = await postReq;
   const params = [myId, targetId];
   const result = await connectAndQuery(FollowQueries.followUser, params);
+  const commentatorNickname = await connectAndQuery(
+    FollowQueries.getUsernameById,
+    [myId]
+  );
   const data = result[0];
-  return data && data;
+  return data && commentatorNickname[0][0].nickname;
 };
 exports.unfollowUser = async postReq => {
   const [myId, targetId] = await postReq;
