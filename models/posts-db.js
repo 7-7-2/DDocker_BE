@@ -1,5 +1,6 @@
 const db = require('../loaders/db');
 const PostQueries = require('./posts-queries');
+const LikesQueries = require('./likes-queries');
 
 const connectAndQuery = async (...queryAndParam) => {
   const conn = await db();
@@ -55,8 +56,12 @@ exports.writeComment = async postReq => {
   const [userId, postId, content] = await postReq;
   const params = [userId, postId, content];
   const result = await connectAndQuery(PostQueries.writeComment, params);
+  const postOwnerInfo = await connectAndQuery(LikesQueries.getPostOwner, [
+    postId
+  ]);
+
   const data = result[0];
-  return data && data;
+  return data && [postOwnerInfo[0][0].user_id, postOwnerInfo[0][0].nickname];
 };
 
 exports.deleteComment = async postReq => {

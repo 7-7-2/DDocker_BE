@@ -13,8 +13,11 @@ exports.likePost = async postReq => {
   const [myId, targetId] = await postReq;
   const params = [myId, targetId];
   const result = await connectAndQuery(LikesQueries.likePost, params);
+  const postOwnerInfo = await connectAndQuery(LikesQueries.getPostOwner, [
+    targetId
+  ]);
   const data = result[0].affectedRows;
-  return data && data;
+  return data && [postOwnerInfo[0][0].user_id, postOwnerInfo[0][0].nickname];
 };
 
 exports.undoLikePost = async postReq => {
