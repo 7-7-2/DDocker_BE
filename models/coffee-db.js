@@ -22,7 +22,6 @@ exports.getCoffeeInfoSum = async getReq => {
 };
 
 exports.getDaySum = async ({ userid, date }) => {
-  console.log(userid, date.query);
   const result = await executeQuery(
     `
             SELECT COUNT(*) AS CountSum, CAST(COALESCE(SUM(caffeine), 0) AS UNSIGNED) AS CaffeineSum
