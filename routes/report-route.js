@@ -10,4 +10,10 @@ router.post(
   errorHandler(reportController.postReport)
 );
 
+router.post(
+  '/report/comment/:commentId',
+  AuthMiddleware.verifyToken,
+  errorHandler(reportController.commentReport)
+);
+
 module.exports = router;
