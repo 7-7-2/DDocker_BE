@@ -17,7 +17,6 @@ const commentReport = async (req, res) => {
     req.body.type,
     commentId
   ];
-  console.log('🚀 ~ commentReport ~ reportReq:', reportReq);
   const result = await reportService.commentReport(reportReq, res);
   return result && res.status(200).json('success : ok');
 };
