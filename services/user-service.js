@@ -22,8 +22,8 @@ const googleSignIn = async res => {
   url += `?client_id=${GOOGLE_CLIENT_ID}`;
   url += `&redirect_uri=${GOOGLE_REDIRECT_URI}`;
   url += '&response_type=code';
-  url += '&scope=email profile';
-  return url;
+  url += '&scope=email';
+  return url ? url : await Promise.reject('Failed to get user google Oauth');
 };
 
 const getGoogleAuth = async code => {
@@ -62,7 +62,7 @@ const getGoogleAuth = async code => {
   }
 
   const res = await userInfoReq.json();
-  const userInfo = [res.picture, res.email, 'google'];
+  const userInfo = [res.email, 'google'];
   return userInfo
     ? userInfo
     : await Promise.reject('Failed to get user profile');
@@ -74,7 +74,7 @@ const kakaoSignIn = async res => {
   url += `?client_id=${KAKAO_CLIENT_ID}`;
   url += `&redirect_uri=${KAKAO_REDIRECT_URI}`;
   url += '&response_type=code';
-  return url;
+  return url ? url : await Promise.reject('Failed to get user kakao Oauth');
 };
 
 const getKakaoAuth = async code => {
@@ -115,11 +115,7 @@ const getKakaoAuth = async code => {
   }
 
   const res = await userInfoReq.json();
-  const userInfo = [
-    res.kakao_account.profile.profile_image_url,
-    res.kakao_account.email,
-    'kakao'
-  ];
+  const userInfo = [res.kakao_account.email, 'kakao'];
   return userInfo
     ? userInfo
     : await Promise.reject('Failed to get user profile');
@@ -127,8 +123,8 @@ const getKakaoAuth = async code => {
 
 // 소셜로그인 연동
 const setUserOauth = async (req, res) => {
-  const email = req[1];
-  const social = req[2];
+  const email = req[0];
+  const social = req[1];
   const id = nanoid();
   await req.push(id);
 

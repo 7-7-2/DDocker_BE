@@ -1,13 +1,12 @@
 const db = require('../loaders/db');
 
 const setUserOauth = async req => {
-  const sql =
-    'INSERT INTO user (profileUrl, useremail, social, public_id) VALUES (?,?,?,?)';
+  const sql = 'INSERT INTO user (useremail, social, public_id) VALUES (?,?,?)';
   const conn = await db();
   const getConn = await conn.getConnection();
-  await getConn.query(sql, req).catch(err => console.log(err));
+  const result = await getConn.query(sql, req).catch(err => console.log(err));
   getConn.release();
-  return result[0] ? result[0] : null;
+  return result[0] ? { profileUrl: req[0] } : null;
 };
 
 const setUserInit = async req => {
