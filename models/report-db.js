@@ -16,7 +16,6 @@ const commentReport = async req => {
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql, req).catch(err => console.log(err));
-  console.log('🚀 ~ commentReport ~ result:', result);
   getConn.release();
   return result[0] ? result[0] : null;
 };
