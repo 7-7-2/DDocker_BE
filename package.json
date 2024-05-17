@@ -2,7 +2,7 @@
   "name": "express",
   "version": "1.0.0",
   "description": "",
-  "main": "indexs.js",
+  "main": "app.js",
   "scripts": {
     "start": "pm2 start ecosystem.config.js",
     "dev": "cross-env NODE_ENV=development pm2 start ecosystem.config.js",
@@ -25,6 +25,7 @@
     "util": "^0.12.5"
   },
   "devDependencies": {
+    "artillery": "^2.0.12",
     "cross-env": "^7.0.3",
     "mysql2": "^3.7.1",
     "prettier": "^3.1.1"
