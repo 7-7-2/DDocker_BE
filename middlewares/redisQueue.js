@@ -1,14 +1,4 @@
-const { createClient } = require('redis');
-
-const redisPort = process.env.REDIS_PORT;
-
-const redisClient = createClient(redisPort);
-
-const run = async () => {
-  await redisClient.connect();
-};
-
-run();
+const { publisherClient } = require('../loaders/redis');
 
 const curryClientStoreFollow =
   client => async (senderId, receiverId, nickname) => {
@@ -55,9 +45,9 @@ const curryClientRetrieve = client => async receiverId => {
   return notifications;
 };
 
-const storeFollowNotification = curryClientStoreFollow(redisClient);
-const storePostNotification = curryClientStorePost(redisClient);
-const retrieveNotifications = curryClientRetrieve(redisClient);
+const storeFollowNotification = curryClientStoreFollow(publisherClient);
+const storePostNotification = curryClientStorePost(publisherClient);
+const retrieveNotifications = curryClientRetrieve(publisherClient);
 
 module.exports = {
   storeFollowNotification,

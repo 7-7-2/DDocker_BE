@@ -1,4 +1,4 @@
-const db = require('../loaders/db');
+const { db } = require('../loaders/db');
 
 const postReport = async req => {
   const sql =

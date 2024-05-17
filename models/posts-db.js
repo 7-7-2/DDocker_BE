@@ -1,4 +1,4 @@
-const db = require('../loaders/db');
+const { db } = require('../loaders/db');
 const PostQueries = require('./posts-queries');
 const LikesQueries = require('./likes-queries');
 

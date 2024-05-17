@@ -1,4 +1,4 @@
-const db = require('../loaders/db');
+const { db } = require('../loaders/db');
 
 const executeQuery = async (sql, params) => {
   const conn = await db();
