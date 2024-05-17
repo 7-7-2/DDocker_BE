@@ -40,9 +40,4 @@ router.get(
   errorHandler(userController.getUserPosts)
 );
 
-router.get(
-  '/users/profile/:userId',
-  errorHandler(userController.getUserProfile)
-);
-
 module.exports = router;

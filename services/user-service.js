@@ -216,11 +216,6 @@ const getUserFollowsCount = async userId => {
     : await Promise.reject('Failed to get User Follows Count');
 };
 
-const getUserProfile = async userId => {
-  const result = await userDB.getUserProfile(userId);
-  return result ? result : await Promise.reject('Failed to get User Profile');
-};
-
 module.exports = {
   setUserInit,
   setUserOauth,
@@ -234,6 +229,5 @@ module.exports = {
   patchUserProfile,
   checkUserNickname,
   getUserPosts,
-  getUserFollowsCount,
-  getUserProfile
+  getUserFollowsCount
 };

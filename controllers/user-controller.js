@@ -81,12 +81,7 @@ const getUserFollowsCount = async (req, res) => {
   const result = await userService.getUserFollowsCount(userId);
   return result && res.status(200).json({ success: 'ok', data: result });
 };
-
-const getUserProfile = async (req, res) => {
-  const userId = req.params.userId;
-  const result = await userService.getUserProfile(userId);
-  return result && res.status(200).json({ success: 'ok', data: result });
-};
+ 
 
 module.exports = {
   signIn,
@@ -98,6 +93,5 @@ module.exports = {
   editProfile,
   checkUserNickname,
   getUserPosts,
-  getUserFollowsCount,
-  getUserProfile
+  getUserFollowsCount
 };
