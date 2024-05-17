@@ -7,10 +7,12 @@ const startServer = async () => {
 
   await loaders({ expressApp: app });
 
-  app.listen(PORT, err => {
-    err ? console.log(err) : console.log(`SERVER_ON`);
+  const server = app.listen(PORT, err => {
+    process.send('ready');
+    err
+      ? console.log(err)
+      : console.log(`Application is listening on port ${PORT}...`);
   });
-
   app.use((req, res, next) => {
     res.status(404).send('404 Not Found');
   });
@@ -18,6 +20,14 @@ const startServer = async () => {
   app.use((err, req, res, next) => {
     console.log('errorHandler caught following error:', err);
     res.status(err.status || 500).json({ message: err.message });
+  });
+
+  process.on('SIGINT', () => {
+    server.close(() => {
+      isDisableKeepAlive = true;
+      console.log('Server closed');
+      process.exit(0);
+    });
   });
 };
 

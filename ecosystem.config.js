@@ -4,9 +4,12 @@ module.exports = {
       name: 'DDocker_API',
       script: 'app.js',
       cwd: './',
-      instances: 4,
+      instances: 1,
       autorestart: true,
       watch: true,
+      wait_ready: true,
+      listen_timeout: 50000,
+      kill_timeout: 5000,
       ignore_watch: ['node_modules', 'logs', '.git/FETCH_HEAD'],
       env_local: {
         NODE_ENV: 'local'
