@@ -117,15 +117,6 @@ const getUserFollowedCount = async req => {
   return count && count;
 };
 
-const getUserProfile = async req => {
-  const sql = `SELECT profileUrl FROM user WHERE public_id = '${req}'`;
-  const conn = await db();
-  const getConn = await conn.getConnection();
-  const result = await getConn.query(sql).catch(err => console.log(err));
-  getConn.release();
-  return result[0][0] ? result[0][0].profileUrl : null;
-};
-
 module.exports = {
   patchUserInfo,
   setUserInit,
@@ -136,6 +127,5 @@ module.exports = {
   checkUserNickname,
   getUserPosts,
   getUserFollowingCount,
-  getUserFollowedCount,
-  getUserProfile
+  getUserFollowedCount
 };
