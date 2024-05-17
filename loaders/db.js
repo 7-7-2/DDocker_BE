@@ -2,16 +2,20 @@ require('dotenv').config();
 const mysql = require('mysql2/promise');
 const config = require('../config/db-config');
 
-const conn = async () => {
-  const connection = mysql.createPool({
-    ...config,
-    connectionLimit: 300,
-    connectTimeout: 5000
-  });
-  return connection;
+let pool;
+
+const initializePool = () => {
+  if (!pool) {
+    pool = mysql.createPool({
+      ...config,
+      connectionLimit: 2,
+      connectTimeout: 15000
+    });
+  }
+  return pool;
 };
 
-module.exports = conn;
+module.exports = { initializePool, db: () => pool };
 
 /**
  * DB TRANSACTION => DB의 *상태를 변화*시키기 위해 수행하는 작업 단위

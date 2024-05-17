@@ -1,4 +1,4 @@
-const db = require('../loaders/db');
+const { db } = require('../loaders/db');
 const FollowQueries = require('./follow-queries');
 
 const connectAndQuery = async (...queryAndParam) => {

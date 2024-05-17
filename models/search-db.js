@@ -1,4 +1,4 @@
-const db = require('../loaders/db');
+const { db } = require('../loaders/db');
 const connectAndQuery = async (...queryAndParam) => {
   const conn = await db();
   const getConn = await conn.getConnection();

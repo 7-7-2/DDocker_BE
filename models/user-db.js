@@ -1,4 +1,4 @@
-const db = require('../loaders/db');
+const { db } = require('../loaders/db');
 
 const setUserOauth = async req => {
   const sql = 'INSERT INTO user (useremail, social, public_id) VALUES (?,?,?)';
