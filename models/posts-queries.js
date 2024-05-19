@@ -1,6 +1,5 @@
 const query = require('./query-fns');
 
-//TODO: SELECT 함수화
 const queries = {
   getPostDetail: `SELECT 
   a.brand, a.menu, a.post_title,size, a.shot,caffeine, a.photo, a.created_at, b.profileUrl, b.nickname, b.sum, b.public_id AS userId 
@@ -28,19 +27,26 @@ const queries = {
     'content'
   ]),
   deleteReply: query.buildDelete('reply', ['user_id', 'id']),
-  getComments: `SELECT 
+  getComments: `
+  SELECT 
     u.profileUrl, 
     u.nickname, 
     c.content, 
     c.created_at, 
     c.id,
-    COUNT(r.comment_id) AS reply_count
+    COALESCE(rc.reply_count, 0) AS reply_count
   FROM 
     user u
   LEFT JOIN 
     comment c ON c.user_id = u.public_id
-  LEFT JOIN 
-    reply r ON c.id = r.comment_id
+  LEFT JOIN (
+    SELECT 
+      comment_id, 
+      COUNT(*) AS reply_count 
+    FROM 
+      reply 
+    GROUP BY 
+      comment_id) rc ON c.id = rc.comment_id
   WHERE 
     c.post_id = ?
   GROUP BY 
@@ -55,31 +61,29 @@ const queries = {
   `,
   getFollowingPosts: `
   WITH UserList AS (
-      SELECT a.public_id, a.profileUrl, a.nickname, a.sum
-      FROM user a
-      INNER JOIN (
-          SELECT b.followed_user_id
-          FROM follows b
-          LEFT JOIN user c ON c.public_id = b.following_user_id
-          WHERE c.public_id = ?
-      ) list ON list.followed_user_id = a.public_id
+    SELECT a.public_id, a.profileUrl, a.nickname, a.sum
+    FROM user a
+    INNER JOIN (
+        SELECT b.followed_user_id
+        FROM follows b
+        WHERE b.following_user_id = ?
+    ) list ON list.followed_user_id = a.public_id
   )
   SELECT
-      p.public_id AS postId,
-      p.post_title AS postTitle,
-      p.brand,
-      p.menu,
-      p.shot,
-      p.caffeine,
-      p.photo,
-      p.created_at AS createdAt,
-      u.profileUrl,
-      u.nickname,
-      u.sum,
-      u.public_id AS userId
+    p.public_id AS postId,
+    p.post_title AS postTitle,
+    p.brand,
+    p.menu,
+    p.shot,
+    p.caffeine,
+    p.photo,
+    p.created_at AS createdAt,
+    u.profileUrl,
+    u.nickname,
+    u.sum,
+    u.public_id AS userId
   FROM post p
   INNER JOIN UserList u ON u.public_id = p.user_id
-  GROUP BY p.public_id, p.post_title, p.brand, p.menu, p.shot, p.caffeine, p.photo, p.created_at, u.profileUrl, u.nickname, u.sum
   ORDER BY p.created_at DESC
   LIMIT ?, 5;
 `,
@@ -127,13 +131,20 @@ const queries = {
   ORDER BY COUNT(brand) DESC;`,
   buildPatchQuery: query.buildPatchQuery,
   getDailyPopular: `
-  SELECT p.photo, p.brand, p.menu, p.shot, p.caffeine, p.public_id as postId
+  WITH LikeCounts AS (
+    SELECT post_id, COUNT(*) AS like_count
+    FROM likes
+    GROUP BY post_id
+  )
+  SELECT 
+    p.photo, 
+    p.brand, 
+    p.menu, 
+    p.shot, 
+    p.caffeine, 
+    p.public_id AS postId
   FROM post p
-  JOIN (
-      SELECT post_id, COUNT(*) AS like_count
-      FROM likes
-      GROUP BY post_id
-  ) l ON p.public_id = l.post_id
+  JOIN LikeCounts l ON p.public_id = l.post_id
   WHERE DATE(p.created_at) = CURDATE()
   ORDER BY l.like_count DESC 
   LIMIT 4;
