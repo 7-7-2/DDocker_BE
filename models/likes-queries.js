@@ -6,10 +6,8 @@ const queries = {
   getMyLikeOnPost: `SELECT l.id
   FROM likes l
   WHERE user_id = ? AND post_id = ?`,
-  getPostOwner: `SELECT p.user_id, u.nickname
+  getPostOwner: `SELECT p.user_id
   FROM post p
-  LEFT JOIN user u
-  ON u.public_id = p.user_id
   WHERE p.public_id = ?
   `
 };
