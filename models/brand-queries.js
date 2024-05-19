@@ -1,6 +1,14 @@
 const query = require('./query-fns');
 
 const queries = {
+  getBrandData: `SELECT JSON_OBJECTAGG(brand_name, brand_items) AS coffee_menus
+  FROM (
+      SELECT brand_name, JSON_ARRAYAGG(
+          JSON_OBJECT('brand', brand_name, 'caffeine', caffeine, 'menu', name)
+      ) AS brand_items
+      FROM brand
+      GROUP BY brand_name
+  ) AS temp`,
   getWeeklyPopularBrandMenu: `SELECT
   p.brand, p.menu, COUNT(*) AS menu_count
   FROM post p

@@ -1,4 +1,14 @@
 const { createClient } = require('redis');
+const { db } = require('./db');
+const { getBrandData } = require('../models/brand-queries');
+
+const connectAndQuery = async (...queryAndParam) => {
+  const conn = await db();
+  const getConn = await conn.getConnection();
+  const result = await getConn.query(...queryAndParam);
+  getConn.release();
+  return result;
+};
 
 const redisPort = process.env.REDIS_PORT;
 const redisUrl = process.env.REDIS_URL;
@@ -22,4 +32,21 @@ const initializeRedisClients = async () => {
   }
 };
 
-module.exports = { publisherClient, subscriberClient, initializeRedisClients };
+const cacheBrandData = async () => {
+  const cacheKey = 'brandData';
+  const result = await connectAndQuery(getBrandData);
+  if (publisherClient.isOpen) {
+    await publisherClient.set(cacheKey, JSON.stringify(result[0]));
+  }
+  if (!publisherClient.isOpen) {
+    await publisherClient.connect();
+    await publisherClient.set(cacheKey, JSON.stringify(result[0]));
+  }
+};
+
+module.exports = {
+  publisherClient,
+  subscriberClient,
+  initializeRedisClients,
+  cacheBrandData
+};
