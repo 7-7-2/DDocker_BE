@@ -1,10 +1,14 @@
 const brandService = require('../services/brand-service');
+const { publisherClient } = require('../loaders/redis');
 
 module.exports = {
   getBrand: async (req, res) => {
     try {
-      const data = await brandService.getBrandData();
-      res.status(200).json({ success: 'ok', data: data });
+      const cachedBrands = await publisherClient.get('brandData');
+      const data = !cachedBrands && (await brandService.getBrandData());
+      res
+        .status(200)
+        .json({ success: 'ok', data: cachedBrands ? cachedBrands : data });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
