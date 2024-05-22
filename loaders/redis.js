@@ -1,6 +1,7 @@
 const { createClient } = require('redis');
 const { db } = require('./db');
 const { getBrandData } = require('../models/brand-queries');
+const { getNoticesList, getFAQ } = require('../models/support-queries');
 
 const connectAndQuery = async (...queryAndParam) => {
   const conn = await db();
@@ -44,9 +45,35 @@ const cacheBrandData = async () => {
   }
 };
 
+const cacheNoticesList = async () => {
+  const cacheKey = 'noticesList';
+  const result = await connectAndQuery(getNoticesList);
+  if (publisherClient.isOpen) {
+    await publisherClient.set(cacheKey, JSON.stringify(result[0]));
+  }
+  if (!publisherClient.isOpen) {
+    await publisherClient.connect();
+    await publisherClient.set(cacheKey, JSON.stringify(result[0]));
+  }
+};
+
+const cacheFAQData = async () => {
+  const cacheKey = 'FAQData';
+  const result = await connectAndQuery(getFAQ);
+  if (publisherClient.isOpen) {
+    await publisherClient.set(cacheKey, JSON.stringify(result[0]));
+  }
+  if (!publisherClient.isOpen) {
+    await publisherClient.connect();
+    await publisherClient.set(cacheKey, JSON.stringify(result[0]));
+  }
+};
+
 module.exports = {
   publisherClient,
   subscriberClient,
   initializeRedisClients,
-  cacheBrandData
+  cacheBrandData,
+  cacheNoticesList,
+  cacheFAQData
 };
