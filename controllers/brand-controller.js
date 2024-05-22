@@ -8,7 +8,10 @@ module.exports = {
       const data = !cachedBrands && (await brandService.getBrandData());
       res
         .status(200)
-        .json({ success: 'ok', data: cachedBrands ? cachedBrands : data });
+        .json({
+          success: 'ok',
+          data: cachedBrands ? JSON.parse(cachedBrands) : data
+        });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
