@@ -7,7 +7,10 @@ const getSupportList = async (req, res) => {
     try {
       const cacheNoticesList = await publisherClient.get('noticesList');
       const data = !cacheNoticesList && (await supportService.getNoticesList());
-      res.status(200).json({ success: 'ok', data: data });
+      res.status(200).json({
+        success: 'ok',
+        data: cacheNoticesList ? JSON.parse(cacheNoticesList) : data
+      });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Internal Server Error' });
@@ -18,7 +21,12 @@ const getSupportList = async (req, res) => {
     try {
       const cacheFAQData = await publisherClient.get('FAQData');
       const data = !cacheFAQData && (await supportService.getFAQ());
-      res.status(200).json({ success: 'ok', data: data });
+      res
+        .status(200)
+        .json({
+          success: 'ok',
+          data: cacheFAQData ? JSON.parse(cacheFAQData) : data
+        });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Internal Server Error' });
