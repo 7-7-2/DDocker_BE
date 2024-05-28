@@ -1,6 +1,5 @@
 const userDB = require('../models/user-db');
 const jwt = require('jsonwebtoken');
-const { nanoid } = require('nanoid');
 
 require('dotenv').config();
 const {
@@ -8,50 +7,75 @@ const {
   GOOGLE_CLIENT_SECRET,
   GOOGLE_TOKEN_URL,
   GOOGLE_REDIRECT_URI,
+  GOOGLE_UNLINK_URI,
   GOOGLE_USERINFO_URL,
   KAKAO_CLIENT_ID,
   KAKAO_REDIRECT_URI,
+  KAKAO_UNLINK_URI,
   KAKAO_TOKEN_URL,
   KAKAO_USERINFO_URL,
   ACCESS_TOKEN_SECRET
 } = require('../config/index');
 
-// GOOGLE OAUTH 소셜로그인
-const googleSignIn = async res => {
+// OAUTH 소셜로그인 code 요청
+const googleSignIn = async (req, res) => {
+  const redirectURI = !req ? GOOGLE_REDIRECT_URI : GOOGLE_UNLINK_URI;
   let url = 'https://accounts.google.com/o/oauth2/v2/auth';
   url += `?client_id=${GOOGLE_CLIENT_ID}`;
-  url += `&redirect_uri=${GOOGLE_REDIRECT_URI}`;
+  url += `&redirect_uri=${redirectURI}`;
   url += '&response_type=code';
   url += '&scope=email';
   return url ? url : await Promise.reject('Failed to get user google Oauth');
 };
 
-const getGoogleAuth = async code => {
-  const data = new URLSearchParams({
-    code,
-    client_id: GOOGLE_CLIENT_ID,
-    client_secret: GOOGLE_CLIENT_SECRET,
-    redirect_uri: GOOGLE_REDIRECT_URI,
-    grant_type: 'authorization_code'
-  });
+const kakaoSignIn = async (req, res) => {
+  const redirectURI = !req ? KAKAO_REDIRECT_URI : KAKAO_UNLINK_URI;
+  let url = 'https://kauth.kakao.com/oauth/authorize';
+  url += `?client_id=${KAKAO_CLIENT_ID}`;
+  url += `&redirect_uri=${redirectURI}`;
+  url += '&response_type=code';
+  return url ? url : await Promise.reject('Failed to get user kakao Oauth');
+};
 
-  const req = await fetch(GOOGLE_TOKEN_URL, {
+// OAUTH 유저정보(이메일) 가져오기
+const getSocialAuth = async (social, code) => {
+  const data =
+    social === 'google'
+      ? new URLSearchParams({
+          code,
+          client_id: GOOGLE_CLIENT_ID,
+          client_secret: GOOGLE_CLIENT_SECRET,
+          redirect_uri: GOOGLE_REDIRECT_URI,
+          grant_type: 'authorization_code'
+        })
+      : new URLSearchParams({
+          grant_type: 'authorization_code',
+          client_id: KAKAO_CLIENT_ID,
+          redirect_uri: KAKAO_REDIRECT_URI,
+          code
+        });
+
+  const tokenURL = social === 'google' ? GOOGLE_TOKEN_URL : KAKAO_TOKEN_URL;
+  const userInfoURL =
+    social === 'google' ? GOOGLE_USERINFO_URL : KAKAO_USERINFO_URL;
+
+  const req = await fetch(tokenURL, {
     method: 'POST',
     body: data,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     }
   });
 
   if (!req.ok) {
-    throw new Error('failed to get token');
+    throw new Error('failed to get social accessToken');
   }
 
   const tokenData = await req.json();
-
-  const userInfoReq = await fetch(GOOGLE_USERINFO_URL, {
+  const userInfoReq = await fetch(userInfoURL, {
     headers: {
-      Authorization: `Bearer ${tokenData.access_token}`
+      Authorization: `Bearer ${tokenData.access_token}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   });
 
@@ -62,30 +86,34 @@ const getGoogleAuth = async code => {
   }
 
   const res = await userInfoReq.json();
-  const userInfo = [res.email, 'google'];
+  const email = social === 'google' ? res.email : res.kakao_account.email;
+  const userInfo = [email, social];
+
   return userInfo
-    ? userInfo
+    ? { userInfo: userInfo, socialToken: tokenData.access_token }
     : await Promise.reject('Failed to get user profile');
 };
 
-// KAKAO OAUTH 소셜로그인
-const kakaoSignIn = async res => {
-  let url = 'https://kauth.kakao.com/oauth/authorize';
-  url += `?client_id=${KAKAO_CLIENT_ID}`;
-  url += `&redirect_uri=${KAKAO_REDIRECT_URI}`;
-  url += '&response_type=code';
-  return url ? url : await Promise.reject('Failed to get user kakao Oauth');
-};
+const getSocialToken = async (social, code) => {
+  const data =
+    social === 'google'
+      ? new URLSearchParams({
+          code,
+          client_id: GOOGLE_CLIENT_ID,
+          client_secret: GOOGLE_CLIENT_SECRET,
+          redirect_uri: GOOGLE_UNLINK_URI,
+          grant_type: 'authorization_code'
+        })
+      : new URLSearchParams({
+          grant_type: 'authorization_code',
+          client_id: KAKAO_CLIENT_ID,
+          redirect_uri: KAKAO_UNLINK_URI,
+          code
+        });
 
-const getKakaoAuth = async code => {
-  const data = new URLSearchParams({
-    grant_type: 'authorization_code',
-    client_id: KAKAO_CLIENT_ID,
-    redirect_uri: KAKAO_REDIRECT_URI,
-    code
-  });
+  const tokenURL = social === 'google' ? GOOGLE_TOKEN_URL : KAKAO_TOKEN_URL;
 
-  const req = await fetch(KAKAO_TOKEN_URL, {
+  const req = await fetch(tokenURL, {
     method: 'POST',
     body: data,
     headers: {
@@ -94,62 +122,67 @@ const getKakaoAuth = async code => {
   });
 
   if (!req.ok) {
-    throw new Error('failed to get token');
+    throw new Error('failed to get social accessToken');
   }
 
   const tokenData = await req.json();
-
-  const userInfoReq = await fetch(KAKAO_USERINFO_URL, {
-    headers: {
-      Authorization: `Bearer ${tokenData.access_token}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  });
-
-  if (!userInfoReq.ok) {
-    throw new Error(
-      `Failed to fetch user information: ${
-        userInfoReq.status
-      } - ${await userInfoReq.text()}`
-    );
-  }
-
-  const res = await userInfoReq.json();
-  const userInfo = [res.kakao_account.email, 'kakao'];
-  return userInfo
-    ? userInfo
-    : await Promise.reject('Failed to get user profile');
+  return tokenData
+    ? tokenData.access_token
+    : await Promise.reject('Failed to get social accessToken');
 };
 
-// 소셜로그인 연동
-const setUserOauth = async (req, res) => {
-  const email = req[0];
-  const social = req[1];
-  const id = nanoid();
-  await req.push(id);
+// social auth  ddocker 삭제
+const unlinkSocialAuth = async (social, token) => {
+  const unlinkURL =
+    social === 'google'
+      ? `https://accounts.google.com/o/oauth2/revoke?token=${token}`
+      : `https://kapi.kakao.com/v1/user/unlink`;
 
-  // 가입된 정보가 있을때
-  const userId = await userDB.getUserAuthInfo([email, social]);
+  const headers =
+    social === 'google'
+      ? {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        }
+      : {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${token}`
+        };
+
+  const result = await fetch(unlinkURL, {
+    method: 'POST',
+    headers: headers
+  });
+
+  return result ? result.status : await Promise.reject('Failed to Unlink');
+};
+
+// ddocker 로그인|회원가입
+const ddockerSignIn = async (req, res) => {
+  const { userInfo, socialToken } = req;
+
+  // 회원|비회원 판별
+  const userId = await userDB.getUserAuthInfo(userInfo);
   const result = await getAccessToken(userId);
 
-  // 가입된 정보가 없을때
-  if (!userId) {
-    await userDB.setUserOauth(req);
-    const userId = await userDB.getUserAuthInfo([email, social]);
-    const result = await getAccessToken(userId);
-
-    return result
-      ? await res
-          .status(201)
-          .json({ success: 'Created', accessToken: result, userId: userId })
+  return !userId
+    ? await res.status(201).json({
+        success: 'Created',
+        socialEmail: userInfo[0],
+        socialToken: socialToken
+      })
+    : result
+      ? await res.status(200).json({
+          success: 'OK',
+          accessToken: result,
+          socialToken: socialToken
+        })
       : await Promise.reject('Failed to social login');
-  }
+};
 
-  return result
-    ? await res
-        .status(200)
-        .json({ success: 'OK', accessToken: result, userId: userId })
-    : await Promise.reject('Failed to social login');
+// DDOCKER 회원가입
+const setUserInit = async req => {
+  const result = await userDB.setUserInit(req);
+  return result ? result : await Promise.reject('Failed to DDocker Sign up');
 };
 
 // DDOCKER ACCESS_TOKEN 발급
@@ -168,12 +201,6 @@ const checkUserNickname = async req => {
     : result === 0
       ? true
       : await Promise.reject('Failed to Check Nickname');
-};
-
-// DDOCKER 회원가입
-const setUserInit = async req => {
-  const result = await userDB.setUserInit(req);
-  return result ? result : await Promise.reject('Failed to DDocker Sign up');
 };
 
 // DDOCKER 회원탈퇴
@@ -218,14 +245,15 @@ const getUserFollowsCount = async userId => {
 
 module.exports = {
   setUserInit,
-  setUserOauth,
+  getSocialAuth,
+  ddockerSignIn,
+  unlinkSocialAuth,
   googleSignIn,
-  deleteAccount,
-  getAccessToken,
-  getUserInfo,
-  getGoogleAuth,
   kakaoSignIn,
-  getKakaoAuth,
+  getAccessToken,
+  getSocialToken,
+  deleteAccount,
+  getUserInfo,
   patchUserProfile,
   checkUserNickname,
   getUserPosts,
