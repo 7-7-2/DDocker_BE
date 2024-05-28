@@ -11,7 +11,7 @@ const setUserOauth = async req => {
 
 const setUserInit = async req => {
   const sql =
-    'UPDATE user SET nickname=?, aboutMe=?, brand=?, sum = 0 WHERE public_id = ?';
+    'INSERT INTO user (useremail, social, public_id, nickname, brand, aboutMe, profileUrl, sum) VALUES (?,?,?,?,?,?,?,0)';
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql, req).catch(err => console.log(err));
@@ -41,7 +41,7 @@ const getUserAuthInfo = async req => {
 
 const getUserInfo = async req => {
   const sql =
-    'SELECT nickname, brand, sum, profileUrl,public_id as userId, aboutMe FROM user WHERE public_id = ?';
+    'SELECT nickname, brand, sum, profileUrl, public_id as userId, aboutMe FROM user WHERE public_id = ?';
   const conn = await db();
   const getConn = await conn.getConnection();
   const result = await getConn.query(sql, req).catch(err => console.log(err));
