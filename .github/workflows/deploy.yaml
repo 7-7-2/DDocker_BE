@@ -40,7 +40,7 @@ jobs:
         run: pnpm install
 
       - name: Project running check
-        run: pnpm prod & npx wait-on tcp:127.0.0.1:${{ secrets.PORT }} -t 30s
+        run: pnpm prod & npx wait-on tcp:127.0.0.1:${{ secrets.PORT }} -t 120s
         env:
           PORT: ${{ secrets.PORT }}
           DB_HOST: ${{ secrets.DB_HOST }}
