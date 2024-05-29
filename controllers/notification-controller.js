@@ -8,8 +8,14 @@ exports.retrieveNotifications = async (req, res) => {
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('Access-Control-Allow-Origin', '*');
 
+  let intervalId = setInterval(function () {
+    res.write(`event: ping\ndata: ${userId}\n\n`);
+  }, 60000);
+  res.write(`event: ping\ndata: ${userId}\n\n`);
+
   req.on('close', () => {
     console.log(`SSE connection closed for user ${userId}`);
+    clearInterval(intervalId);
     subscriberClient.unsubscribe(`notifications:${userId}`);
   });
 
