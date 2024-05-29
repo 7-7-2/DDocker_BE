@@ -1,0 +1,79 @@
+name: DDocker to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and Delpoy React
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.15.0]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8.10.5
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Get PNPM cache directory
+        id: pnpm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(pnpm config get store-dir)"
+      - uses: actions/cache@v3
+        id: pnpm-cache
+        with:
+          path: ${{ steps.pnpm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Project running check
+        run: pnpm prod & npx wait-on tcp:127.0.0.1:${{ secrets.PORT}} -t 5s
+        env:
+          PORT: ${{ secrets.PORT }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SCHEMA: ${{ secrets.DB_SCHEMA }}
+          ORIGIN: ${{ secrets.ORIGIN }}
+          CREDENTIALS: ${{ secrets.CREDENTIALS }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+          GOOGLE_UNLINK_URI: ${{ secrets.GOOGLE_UNLINK_URI }}
+          GOOGLE_TOKEN_URL: ${{ secrets.GOOGLE_TOKEN_URL }}
+          GOOGLE_USERINFO_URL: ${{ secrets.GOOGLE_USERINFO_URL }}
+          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
+          KAKAO_UNLINK_URI: ${{ secrets.KAKAO_UNLINK_URI }}
+          KAKAO_TOKEN_URL: ${{ secrets.KAKAO_TOKEN_URL }}
+          KAKAO_USERINFO_URL: ${{ secrets.KAKAO_USERINFO_URL }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+
+      - name: SSH deploy
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.AWS_SSH_HOST }}
+          username: ${{ secrets.AWS_SSH_USERNAME }}
+          password: ${{ secrets.AWS_SSH_PASSWORD }}
+          port: 22
+          script: |
+            sudo su
+            cd ~/DDocker_BE
+            git pull origin main
+            pnpm reload
