@@ -40,12 +40,11 @@ jobs:
         run: pnpm install
 
       - name: SSH deploy
-        uses: appleboy/ssh-action@v0.1.6
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.AWS_SSH_HOST }}
           username: ${{ secrets.AWS_SSH_USERNAME }}
           password: ${{ secrets.AWS_SSH_PASSWORD }}
-          port: 22
           script: |
             sudo su
             cd ~/DDocker_BE
