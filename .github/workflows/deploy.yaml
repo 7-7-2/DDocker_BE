@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    name: Build and Delpoy React
+    name: Launch Express WAS with pm2
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -39,31 +39,33 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Configure .env variables
+        run: |
+          echo "PORT=${{ secrets.PORT }}" >> .env.production
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env.production
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env.production
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env.production
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.production
+          echo "DB_SCHEMA=${{ secrets.DB_SCHEMA }}" >> .env.production
+          echo "ORIGIN=${{ secrets.ORIGIN }}" >> .env.production
+          echo "CREDENTIALS=${{ secrets.CREDENTIALS }}" >> .env.production
+          echo "ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}" >> .env.production
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env.production
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env.production
+          echo "GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}" >> .env.production
+          echo "GOOGLE_UNLINK_URI=${{ secrets.GOOGLE_UNLINK_URI }}" >> .env.production
+          echo "GOOGLE_TOKEN_URL=${{ secrets.GOOGLE_TOKEN_URL }}" >> .env.production
+          echo "GOOGLE_USERINFO_URL=${{ secrets.GOOGLE_USERINFO_URL }}" >> .env.production
+          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env.production
+          echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env.production
+          echo "KAKAO_UNLINK_URI=${{ secrets.KAKAO_UNLINK_URI }}" >> .env.production
+          echo "KAKAO_TOKEN_URL=${{ secrets.KAKAO_TOKEN_URL }}" >> .env.production
+          echo "KAKAO_USERINFO_URL=${{ secrets.KAKAO_USERINFO_URL }}" >> .env.production
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env.production
+          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> .env.production
+
       - name: Project running check
         run: pnpm prod & npx wait-on tcp:127.0.0.1:${{ secrets.PORT }} -t 120s
-        env:
-          PORT: ${{ secrets.PORT }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_SCHEMA: ${{ secrets.DB_SCHEMA }}
-          ORIGIN: ${{ secrets.ORIGIN }}
-          CREDENTIALS: ${{ secrets.CREDENTIALS }}
-          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
-          GOOGLE_UNLINK_URI: ${{ secrets.GOOGLE_UNLINK_URI }}
-          GOOGLE_TOKEN_URL: ${{ secrets.GOOGLE_TOKEN_URL }}
-          GOOGLE_USERINFO_URL: ${{ secrets.GOOGLE_USERINFO_URL }}
-          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
-          KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
-          KAKAO_UNLINK_URI: ${{ secrets.KAKAO_UNLINK_URI }}
-          KAKAO_TOKEN_URL: ${{ secrets.KAKAO_TOKEN_URL }}
-          KAKAO_USERINFO_URL: ${{ secrets.KAKAO_USERINFO_URL }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          REDIS_URL: ${{ secrets.REDIS_URL }}
 
       - name: SSH deploy
         uses: appleboy/ssh-action@v0.1.6
