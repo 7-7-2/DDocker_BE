@@ -48,7 +48,6 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |
-            sudo su
-            cd /root/DDocker_BE
-            git pull origin main
-            pm2 reload DDocker_API
+            sudo su -c 'cd /root/DDocker_BE'
+            sudo su -c 'git pull origin main'
+            sudo su -c 'pm2 reload DDocker_API'
