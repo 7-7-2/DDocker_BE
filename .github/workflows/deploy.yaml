@@ -49,6 +49,6 @@ jobs:
           port: 22
           script: |
             sudo su
-            cd ~/DDocker_BE
+            cd /root/DDocker_BE
             git pull origin main
-            pnpm reload
+            pm2 reload DDocker_API
