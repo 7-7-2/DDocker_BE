@@ -41,31 +41,35 @@ jobs:
 
       - name: Configure .env variables
         run: |
-          echo "PORT=${{ secrets.PORT }}" >> .env.production
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env.production
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env.production
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env.production
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.production
-          echo "DB_SCHEMA=${{ secrets.DB_SCHEMA }}" >> .env.production
-          echo "ORIGIN=${{ secrets.ORIGIN }}" >> .env.production
-          echo "CREDENTIALS=${{ secrets.CREDENTIALS }}" >> .env.production
-          echo "ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}" >> .env.production
-          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env.production
-          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env.production
-          echo "GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}" >> .env.production
-          echo "GOOGLE_UNLINK_URI=${{ secrets.GOOGLE_UNLINK_URI }}" >> .env.production
-          echo "GOOGLE_TOKEN_URL=${{ secrets.GOOGLE_TOKEN_URL }}" >> .env.production
-          echo "GOOGLE_USERINFO_URL=${{ secrets.GOOGLE_USERINFO_URL }}" >> .env.production
-          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> .env.production
-          echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> .env.production
-          echo "KAKAO_UNLINK_URI=${{ secrets.KAKAO_UNLINK_URI }}" >> .env.production
-          echo "KAKAO_TOKEN_URL=${{ secrets.KAKAO_TOKEN_URL }}" >> .env.production
-          echo "KAKAO_USERINFO_URL=${{ secrets.KAKAO_USERINFO_URL }}" >> .env.production
-          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env.production
-          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> .env.production
+          echo "PORT=${{ secrets.PORT }}" >> .env.development
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env.development
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env.development
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env.development
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.development
+          echo "DB_SCHEMA=${{ secrets.DB_SCHEMA }}" >> .env.development
+          echo "ORIGIN=${{ secrets.ORIGIN }}" >> .env.development
+          echo "CREDENTIALS=${{ secrets.CREDENTIALS }}" >> .env.development
+          echo "ACCESS_TOKEN_SECRET=${{ secrets.ACCESS_TOKEN_SECRET }}" >> .env.development
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env.development
+          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> .env.development
+
+      - name: Install MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+          sudo service mysql start
+          sudo mysql -e "CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_SCHEMA }};"
+          sudo mysql -e "CREATE USER IF NOT EXISTS '${{ secrets.DB_USER }}'@'localhost' IDENTIFIED BY '${{ secrets.DB_PASSWORD }}';"
+          sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO '${{ secrets.DB_USER }}'@'localhost';"
+          sudo mysql -e "FLUSH PRIVILEGES;"
+
+      - name: Install Redis
+        run: |
+          sudo apt-get install -y redis
+          sudo service redis start
 
       - name: Project running check
-        run: pnpm prod & npx wait-on tcp:127.0.0.1:${{ secrets.PORT }} -t 120s
+        run: pnpm dev & npx wait-on tcp:127.0.0.1:${{ secrets.PORT }} -t 120s
 
       - name: SSH deploy
         uses: appleboy/ssh-action@v0.1.6
