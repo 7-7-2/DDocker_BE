@@ -45,6 +45,7 @@ jobs:
           host: ${{ secrets.AWS_SSH_HOST }}
           username: ${{ secrets.AWS_SSH_USERNAME }}
           password: ${{ secrets.AWS_SSH_PASSWORD }}
+          key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |
             sudo su
