@@ -6,7 +6,7 @@ exports.retrieveNotifications = async (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', 'https://ddocker.kro.kr');
 
   let intervalId = setInterval(function () {
     res.write(`event: ping\ndata: ${userId}\n\n`);
