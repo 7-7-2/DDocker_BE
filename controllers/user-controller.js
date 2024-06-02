@@ -58,7 +58,6 @@ const deleteAccount = async (req, res) => {
 };
 
 const editProfile = async (req, res) => {
-  await userService.unlinkSocialAuth(social, token);
   const result = await userService.patchUserProfile([req.body, req.userId]);
   return result && res.status(200).json('success : ok');
 };
