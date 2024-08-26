@@ -2,7 +2,7 @@ const query = require('./query-fns');
 
 const queries = {
   getPostDetail: `SELECT 
-  a.brand, a.menu, a.post_title,size, a.shot,caffeine, a.photo, a.created_at, b.profileUrl, b.nickname, b.sum, b.public_id AS userId 
+  a.brand, a.menu, a.post_title,size, a.shot,caffeine, a.photo, a.created_at, a.description, a.intensity, b.profileUrl, b.nickname, b.sum, b.public_id AS userId 
   FROM post a 
   LEFT JOIN user b 
   ON a.user_id = b.public_id 
@@ -16,7 +16,9 @@ const queries = {
     'shot',
     'caffeine',
     'photo',
-    'public_id'
+    'public_id',
+    'description',
+    'intensity'
   ]),
   deletePost: query.buildDelete('post', ['public_id']),
   writeComment: query.buildInsert('comment', ['user_id', 'post_id', 'content']),

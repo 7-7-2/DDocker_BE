@@ -19,8 +19,18 @@ exports.getPostDetail = async postReq => {
 };
 
 exports.registerPost = async postReq => {
-  const { brand, menu, post_title, size, shot, caffeine, photo, postId } =
-    await postReq[1];
+  const {
+    brand,
+    menu,
+    post_title,
+    size,
+    shot,
+    caffeine,
+    photo,
+    postId,
+    intensity,
+    description
+  } = await postReq[1];
   const params = [
     postReq[0],
     brand,
@@ -30,7 +40,9 @@ exports.registerPost = async postReq => {
     shot,
     caffeine,
     photo,
-    postId
+    postId,
+    intensity,
+    description
   ];
   const result = await connectAndQuery(PostQueries.registerPost, params);
   const data = result[0];
