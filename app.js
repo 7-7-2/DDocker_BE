@@ -4,7 +4,7 @@ const { PORT } = require('./config/index');
 
 const startServer = async () => {
   const app = express();
-
+  process.env.TZ = 'UTC';
   await loaders({ expressApp: app });
 
   const server = app.listen(PORT, err => {
