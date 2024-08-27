@@ -59,7 +59,7 @@ const deleteAllFolderItems = instance => async folderPath => {
       })
     );
   }
-  return;
+  return true;
 };
 
 module.exports = {

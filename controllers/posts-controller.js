@@ -156,3 +156,11 @@ exports.getR2DeleteUrl = async (req, res) => {
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
   );
 };
+//17. R2 presigned-delete-all-url
+exports.getR2DeleteAllUrl = async (req, res) => {
+  const postRes = await PostService.getR2DeleteAllUrl(req);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};

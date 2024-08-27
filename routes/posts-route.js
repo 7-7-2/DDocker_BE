@@ -68,4 +68,10 @@ router.get(
   errorHandler(postController.getR2DeleteUrl)
 );
 
+router.get(
+  '/posts/presigned-delete-all-url/:dir/:userId',
+  AuthMiddleware.verifyToken,
+  errorHandler(postController.getR2DeleteAllUrl)
+);
+
 module.exports = router;
