@@ -94,5 +94,11 @@ module.exports = {
       `${dir}/${userId}/${postId}`
     );
     return result ? result : Promise.reject('Failed to get R2 delete url');
+  },
+  getR2DeleteAllUrl: async (req, res) => {
+    if (!req.params.userId === req.userId) return;
+    const { dir, userId } = req.params;
+    const result = await storageURL.deleteAllFolderItems(`${dir}/${userId}`);
+    return result ? result : Promise.reject('Failed to get R2 delete url');
   }
 };
