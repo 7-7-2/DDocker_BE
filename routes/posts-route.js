@@ -56,6 +56,16 @@ router.get(
   errorHandler(postController.getSocialCounts)
 );
 
-module.exports = router;
+router.get(
+  '/posts/presigned-upload-url/:dir/:userId/:postId?',
+  AuthMiddleware.verifyToken,
+  errorHandler(postController.getR2UploadUrl)
+);
 
-// routes => 서버에 요청이 들어올 때 URI의 path에 따라 필요한 controller로 이어주는 역할만 담당
+router.get(
+  '/posts/presigned-delete-url/:dir/:userId/:postId?',
+  AuthMiddleware.verifyToken,
+  errorHandler(postController.getR2DeleteUrl)
+);
+
+module.exports = router;

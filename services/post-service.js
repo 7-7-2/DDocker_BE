@@ -1,6 +1,7 @@
 const postsDB = require('../models/posts-db');
 const validatePostForm = require('../middlewares/validatePostForm');
 const switchBrand = require('../middlewares/switchBrand');
+const storageURL = require('../middlewares/generateStorageURL');
 
 module.exports = {
   getPostDetail: async (req, res) => {
@@ -67,5 +68,31 @@ module.exports = {
   getDailyPopular: async (req, res) => {
     const result = await postsDB.getDailyPopular(req);
     return result ? result : Promise.reject('Failed to get daily popular');
+  },
+  getR2UploadUrl: async (req, res) => {
+    if (!req.params.userId === req.userId) return;
+    if (!req.params.postId) {
+      const { dir, userId } = req.params;
+      const result = await storageURL.getPresignedUploadUrl(`${dir}/${userId}`);
+      return result ? result : Promise.reject('Failed to get R2 upload url');
+    }
+    const { dir, userId, postId } = req.params;
+    const result = await storageURL.getPresignedUploadUrl(
+      `${dir}/${userId}/${postId}`
+    );
+    return result ? result : Promise.reject('Failed to get R2 upload url');
+  },
+  getR2DeleteUrl: async (req, res) => {
+    if (!req.params.userId === req.userId) return;
+    if (!req.params.postId) {
+      const { dir, userId } = req.params;
+      const result = await storageURL.getPresignedDeleteUrl(`${dir}/${userId}`);
+      return result ? result : Promise.reject('Failed to get R2 delete url');
+    }
+    const { dir, userId, postId } = req.params;
+    const result = await storageURL.getPresignedDeleteUrl(
+      `${dir}/${userId}/${postId}`
+    );
+    return result ? result : Promise.reject('Failed to get R2 delete url');
   }
 };
