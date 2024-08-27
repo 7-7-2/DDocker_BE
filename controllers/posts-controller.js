@@ -140,3 +140,19 @@ exports.getDailyPopular = async (req, res) => {
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
   );
 };
+//15.R2 presigned-upload-url
+exports.getR2UploadUrl = async (req, res) => {
+  const postRes = await PostService.getR2UploadUrl(req);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};
+//16.R2 presigned-delete-url
+exports.getR2DeleteUrl = async (req, res) => {
+  const postRes = await PostService.getR2DeleteUrl(req);
+  return (
+    postRes &&
+    res.status(200).json({ data: postRes !== undefined ? postRes : null })
+  );
+};
