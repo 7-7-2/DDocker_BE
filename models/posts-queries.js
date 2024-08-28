@@ -81,6 +81,8 @@ const queries = {
     p.caffeine,
     p.photo,
     p.created_at AS createdAt,
+    p.intensity,
+    p.size,
     u.profileUrl,
     u.nickname,
     u.sum,
