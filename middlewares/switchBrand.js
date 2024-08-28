@@ -13,6 +13,7 @@ brandMap.set('coffeebean', '커피빈');
 brandMap.set('mammoth', '매머드커피');
 brandMap.set('private', '나만의 카페');
 brandMap.set('banapresso', '바나프레소');
+brandMap.set('bbak', '빽다방');
 
 const switchBrand = brand => {
   return brandMap.get(brand);
