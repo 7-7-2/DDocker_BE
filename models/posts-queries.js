@@ -17,8 +17,8 @@ const queries = {
     'caffeine',
     'photo',
     'public_id',
-    'description',
-    'intensity'
+    'intensity',
+    'description'
   ]),
   deletePost: query.buildDelete('post', ['public_id']),
   writeComment: query.buildInsert('comment', ['user_id', 'post_id', 'content']),
