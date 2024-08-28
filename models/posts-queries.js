@@ -32,7 +32,8 @@ const queries = {
   getComments: `
   SELECT 
     u.profileUrl, 
-    u.nickname, 
+    u.nickname,
+    u.public_id,
     c.content, 
     c.created_at, 
     c.id,
@@ -55,7 +56,7 @@ const queries = {
     c.id;
   `,
   getReply: `SELECT
-  u.profileUrl, u.nickname, r.content, r.created_at, r.id
+  u.profileUrl, u.nickname, u.public_id, r.content, r.created_at, r.id
   FROM user u
   LEFT JOIN reply r
   ON r.comment_id = ?
