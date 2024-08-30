@@ -125,8 +125,9 @@ exports.getSocialCounts = async (req, res) => {
 // 13. 메인 페이지 브랜드 순위 조회
 exports.getRanking = async (req, res) => {
   const result = await PostService.getRanking(req);
-  const date = new Date().getDate();
-  const postRes = { [Number(date)]: result };
+  const date = new Date();
+  const kstDate = new Date(date.getTime() + 9 * 60 * 60 * 1000).getDate();
+  const postRes = { [Number(kstDate)]: result };
   return (
     postRes &&
     res.status(200).json({ data: postRes !== undefined ? postRes : null })
