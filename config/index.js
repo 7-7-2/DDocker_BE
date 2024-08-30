@@ -12,7 +12,10 @@ if (process.env.NODE_ENV === undefined) {
 }
 
 const CREDENTIALS = (process.env.CREDENTIALS = true);
-const ORIGIN = (process.env.ORIGIN = 'https://ddocker.kro.kr');
+const ORIGIN = (process.env.ORIGIN = [
+  'https://ddocker.kro.kr',
+  'https://www.ddocker.kro.kr'
+]);
 
 const {
   NODE_ENV,
